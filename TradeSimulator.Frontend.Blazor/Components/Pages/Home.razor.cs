@@ -12,7 +12,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
     public class HomeBase : ComponentBase, IAsyncDisposable
     {
 
-        private readonly string _defaultHubURL = "https://localhost:7125/trade-hub";
+        private readonly string _defaultHubURL = "http://localhost:5038/trade-hub";
 
         [Inject] NavigationManager Navigation { get; set; }
         [Inject] ISnackbar Snackbar { get; set; }

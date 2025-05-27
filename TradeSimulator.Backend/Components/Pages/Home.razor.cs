@@ -11,7 +11,7 @@ namespace TradeSimulator.Backend.Components.Pages
 {
     public class HomeBase : ComponentBase
     {
-        private readonly string _defaultHubURL = "https://localhost:7125/trade-hub";
+        private readonly string _defaultHubURL = "http://localhost:5038/trade-hub";
 
         [Inject] NavigationManager Navigation { get; set; }
 
