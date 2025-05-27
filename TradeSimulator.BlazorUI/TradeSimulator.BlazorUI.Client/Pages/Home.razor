@@ -1,0 +1,28 @@
+﻿@page "/"
+@inherits HomeBase
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h1" Align="Align.Center" GutterBottom="true">Hello, world!</MudText>
+<MudText Typo="Typo.body1">
+    Cras quis urna mollis, ultricies elit id, iaculis neque.
+    Proin non sapien quam. Etiam tempus tristique erat et cursus.
+    Nam consectetur lobortis eleifend. In dapibus commodo pellentesque.
+    Mauris vitae leo lacus.
+    Ut scelerisque lectus sit amet nisi dignissim, at pellentesque odio iaculis.
+    Vestibulum lectus leo, laoreet sit amet tincidunt quis, finibus eu felis.
+    Sed vestibulum nec ligula vitae scelerisque.
+    Nullam iaculis, metus a sodales consequat, orci lacus maximus risus, ac fringilla eros nunc ac dolor.
+    Aenean finibus, ex eu iaculis ultricies, mi tellus faucibus augue, at venenatis ante eros a odio.
+    Ut id felis vitae nibh aliquet accumsan.
+    Cras tempus metus sit amet pharetra gravida.
+    Sed eu diam non urna tristique suscipit id maximus arcu.
+    Nunc lacinia non urna vitae hendrerit.
+</MudText>
+
+<MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Class="mt-8">
+    <MudTextField @bind-Value="BrokerId" Label="Broker Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="@IsConnected"></MudTextField>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@(() => Console.WriteLine("PROUT"))>Login</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Large" Disabled="@IsDisconnected" OnClick="@Disconnect">Logout</MudButton>
+</MudStack>

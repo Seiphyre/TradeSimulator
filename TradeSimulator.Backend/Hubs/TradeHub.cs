@@ -1,16 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
-namespace TradeSimulator.Server.Hubs
+namespace TradeSimulator.Backend.Hubs
 {
     public class TradeHub : Hub
     {
-        public static List<string> _logs = new();
-
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
-
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine("OnConnectedAsync");
@@ -23,6 +17,6 @@ namespace TradeSimulator.Server.Hubs
             await Clients.All.SendAsync("OnDisconnected", UserName, "Disconnected");
         }
 
-        private string UserName => Context.User.Identity.Name;
+        private string UserName => Context.User?.Identity?.Name ?? Context.ConnectionId;
     }
 }
