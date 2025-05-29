@@ -1,0 +1,60 @@
+﻿@using TradeSimulator.Shared.Models
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5">Choose a ticker for your order book</MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudForm @ref=_form>
+            <MudSelect T="Ticker" @bind-Value="_value" Variant="Variant.Outlined" Label="Ticker" Margin="Margin.None" Modal="true" Required="true">
+                @foreach (var ticker in Tickers)
+                {
+                    <MudSelectItem T="Ticker" Value="@ticker">@ticker.DisplayName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Continue</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public List<Ticker> Tickers { get; set; }
+
+    private MudForm _form { get; set; }
+    private Ticker _value { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var options = MudDialog.Options with
+            {
+                FullWidth = true,
+                CloseOnEscapeKey = true,
+                MaxWidth = MaxWidth.Small,
+                BackdropClick = false
+            };
+
+        MudDialog.SetOptionsAsync(options);
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+
+        if (_form.IsValid)
+            MudDialog.Close(DialogResult.Ok(_value));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
+

@@ -1,0 +1,31 @@
+﻿@page "/order-book/{TickerId}"
+@inherits OrderBookBase
+
+<PageTitle>@(_isLoading ? "loading.." : _ticker.DisplayName)</PageTitle>
+
+@if(_isLoading)
+{
+    <PageTitle>loading...</PageTitle>
+
+    <Loader/>
+}
+else
+{
+    <PageTitle>@_ticker.DisplayName</PageTitle>
+
+    <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mb-8">Ticker: @_ticker.DisplayName</MudText>
+
+    <MudTable Items="@_ticker.Orders" Hover="true" Breakpoint="Breakpoint.Xs">
+        <HeaderContent>
+            <MudTh>Layer</MudTh>
+            <MudTh>Price</MudTh>
+            <MudTh>Quantity</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Layer">@context.TransactionType</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+        </RowTemplate>
+    </MudTable>
+
+}

@@ -1,4 +1,4 @@
-﻿using TradeSimulator.Backend.Models;
+﻿using TradeSimulator.Shared.Models;
 
 namespace TradeSimulator.Backend.Repositories
 {
@@ -18,7 +18,7 @@ namespace TradeSimulator.Backend.Repositories
             return Entities.FirstOrDefault(entity => entity.Id == id);
         }
 
-        public virtual List<TEntity> GetAll(string id)
+        public virtual List<TEntity> GetAll()
         {
             return new List<TEntity>(Entities);
         }

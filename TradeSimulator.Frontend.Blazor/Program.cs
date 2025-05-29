@@ -1,6 +1,7 @@
 using MudBlazor;
 using MudBlazor.Services;
 using TradeSimulator.Frontend.Blazor.Components;
+using TradeSimulator.Shared.Services;
 
 namespace TradeSimulator.Frontend.Blazor
 {
@@ -27,6 +28,8 @@ namespace TradeSimulator.Frontend.Blazor
                 config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
                 config.SnackbarConfiguration.ClearAfterNavigation = true;
             });
+
+            builder.Services.AddSingleton<TradeService>();
 
             var app = builder.Build();
 

@@ -1,8 +1,8 @@
-﻿namespace TradeSimulator.Backend.Models
+﻿namespace TradeSimulator.Shared.Models
 {
     public abstract class EntityBase : IEntity<string>
     {
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         public EntityBase()
         {

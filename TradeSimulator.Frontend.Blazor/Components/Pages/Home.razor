@@ -1,9 +1,9 @@
 ﻿@page "/"
 @inherits HomeBase
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Trade Simulator</PageTitle>
 
-<MudText Typo="Typo.h1" Align="Align.Center" GutterBottom="true">Hello, world!</MudText>
+<MudText Typo="Typo.h1" Align="Align.Center" GutterBottom="true">Trade Simulator</MudText>
 <MudText Typo="Typo.body1">
     Cras quis urna mollis, ultricies elit id, iaculis neque.
     Proin non sapien quam. Etiam tempus tristique erat et cursus.
@@ -24,7 +24,7 @@
     <MudTextField @bind-Value="BrokerId" Label="Broker Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="@IsConnected"></MudTextField>
     @if (!IsConnected)
     {
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Disabled="@(IsConnected || IsConnecting)" OnClick=@Connect>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Disabled="@(IsConnected || IsConnecting)" OnClick=@ConnectAndGetTickers>
             @if (IsConnecting)
             {
                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -51,3 +51,11 @@
         </MudButton>
     }
 </MudStack>
+
+@if (IsConnected)
+{
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-8">
+        <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mt-8">Order books</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@OpenOrderBook>Open</MudButton>
+    </MudStack>
+}

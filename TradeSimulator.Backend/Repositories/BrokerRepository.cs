@@ -1,4 +1,4 @@
-﻿using TradeSimulator.Backend.Models;
+﻿using TradeSimulator.Shared.Models;
 
 namespace TradeSimulator.Backend.Repositories
 {

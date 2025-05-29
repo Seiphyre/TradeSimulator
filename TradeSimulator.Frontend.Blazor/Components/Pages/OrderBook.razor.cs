@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.JSInterop;
 using MudBlazor;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,17 +8,18 @@ using System.Security.Claims;
 using System.Text;
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TradeSimulator.Frontend.Blazor.Components.Pages
 {
-    public class HomeBase : ComponentBase
+    public class OrderBookBase : ComponentBase
     {
 
         private readonly string _defaultHubURL = "http://localhost:5038/trade-hub";
 
+        [Parameter]
+        public string TickerId { get; set; }
+
         [Inject] NavigationManager Navigation { get; set; }
-        [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] ISnackbar Snackbar { get; set; }
         [Inject] IDialogService DialogService { get; set; }
         [Inject] TradeService TradeService { get; set; }
@@ -34,13 +34,22 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
         private bool _isConnecting = false;
         private bool _isDisconnecting = false;
 
+        protected Ticker _ticker;
+        protected bool _isLoading = false;
 
 
         /* ---------------------------------------------------------- */
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            BrokerId = GenerateRandomBrokerId();
+            _isLoading = true;
+
+            if (!TradeService.IsConnected)
+                Navigation.NavigateTo("/");
+
+            _ticker = await TradeService.GetTickerById(TickerId);
+
+            _isLoading = false;
         }
 
         protected async Task ConnectAndGetTickers()
@@ -117,9 +126,8 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             if (!result.Canceled)
             {
                 Ticker ticker = result.Data as Ticker;
-                string url = Path.Combine(Navigation.BaseUri, "order-book", ticker.Id);
 
-                await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+                Console.WriteLine(ticker.DisplayName);
             }
         }
 

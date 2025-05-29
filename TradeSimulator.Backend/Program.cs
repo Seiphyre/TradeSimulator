@@ -4,6 +4,7 @@ using MudBlazor.Services;
 using System.Text;
 using TradeSimulator.Backend.Components;
 using TradeSimulator.Backend.Hubs;
+using TradeSimulator.Backend.Repositories;
 
 namespace TradeSimulator.Backend
 {
@@ -56,6 +57,9 @@ namespace TradeSimulator.Backend
             });
 
             builder.Services.AddMudServices();
+
+            builder.Services.AddSingleton<BrokerRepository>();
+            builder.Services.AddSingleton<TickerRepository>();
 
             var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿namespace TradeSimulator.Backend.Models
+﻿namespace TradeSimulator.Shared.Models
 {
     public class Broker : EntityBase
     {
