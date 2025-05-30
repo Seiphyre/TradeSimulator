@@ -63,16 +63,16 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
         {
             BrokerId = GenerateRandomBrokerId();
 
-            TradeService.OnCreateOrderBook += TradeHub_OnCreateOrderBook;
-            TradeService.OnDeleteOrderBook += TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
         }
 
         // --
 
         public void Dispose()
         {
-            TradeService.OnCreateOrderBook -= TradeHub_OnCreateOrderBook;
-            TradeService.OnDeleteOrderBook -= TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
         }
 
 
@@ -219,6 +219,8 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             string url = Path.Combine(Navigation.BaseUri, "order-book", orderBook.TickerId);
 
             await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+
+            await TradeService.OpenOrderBook(orderBook.Id);
         }
 
 
@@ -244,6 +246,8 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             string url = Path.Combine(Navigation.BaseUri, "transactions", BrokerId);
 
             await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+
+            await TradeService.OpenTransactionHistory();
         }
 
 

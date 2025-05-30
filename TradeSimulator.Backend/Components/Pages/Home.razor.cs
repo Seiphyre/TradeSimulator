@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-
+using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
 
 
@@ -24,17 +24,24 @@ namespace TradeSimulator.Backend.Components.Pages
 
             TradeService.OnConnected += TradeService_OnConnected;
             TradeService.OnDisconnected += TradeService_OnDisconnected;
-            TradeService.OnCreateOrderBook += TradeService_OnCreateOrderBook;
-            TradeService.OnDeleteOrderBook += TradeService_OnDeleteOrderBook;
+
+            TradeService.OnCreatedOrderBook += TradeService_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook += TradeService_OnDeleteOrderBook;
+            TradeService.OnOpenedOrderBook += TradeService_OnOpenedOrderBook;
+
+            TradeService.OnOpenedTransactionHistory += TradeService_OnOpenedTransactionHistory;
         }
 
         public void Dispose()
         {
             TradeService.OnConnected -= TradeService_OnConnected;
             TradeService.OnDisconnected -= TradeService_OnDisconnected;
-            TradeService.OnCreateOrderBook -= TradeService_OnCreateOrderBook;
-            TradeService.OnDeleteOrderBook -= TradeService_OnDeleteOrderBook;
 
+            TradeService.OnCreatedOrderBook -= TradeService_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook -= TradeService_OnDeleteOrderBook;
+            TradeService.OnOpenedOrderBook += TradeService_OnOpenedOrderBook;
+
+            TradeService.OnOpenedTransactionHistory += TradeService_OnOpenedTransactionHistory;
         }
 
 
@@ -52,28 +59,34 @@ namespace TradeSimulator.Backend.Components.Pages
 
         /* -------------------------------------------------------------------- */
 
-        private void TradeService_OnDeleteOrderBook(string username, Shared.Models.OrderBook orderBook)
+        private void TradeService_OnDeleteOrderBook(string username, OrderBook orderBook)
         {
             AddMessage($"{username}: Has deleted an order book ({orderBook.TickerId}).");
         }
 
-        private void TradeService_OnCreateOrderBook(string username, Shared.Models.OrderBook orderBook)
+        private void TradeService_OnCreateOrderBook(string username, OrderBook orderBook)
         {
             AddMessage($"{username}: Has created an order book ({orderBook.TickerId}).");
         }
 
+        private void TradeService_OnOpenedOrderBook(string username, OrderBook orderBook)
+        {
+            AddMessage($"{username}: Has opened an order book ({orderBook.TickerId}).");
+        }
+
         private void TradeService_OnDisconnected(string username)
         {
-            Console.WriteLine("Disconnected");
-
             AddMessage($"{username}: Disconnected.");
         }
 
         private void TradeService_OnConnected(string username)
         {
-            Console.WriteLine("Connected");
-
             AddMessage($"{username}: Connected.");
+        }
+
+        private void TradeService_OnOpenedTransactionHistory(string username)
+        {
+            AddMessage($"{username}: Has opened its transaction history.");
         }
     }
 }

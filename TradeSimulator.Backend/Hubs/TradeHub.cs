@@ -131,6 +131,16 @@ namespace TradeSimulator.Backend.Hubs
             await Clients.All.DeletedOrderBook(UserName, orderBook);
         }
 
+        public async Task OpenOrderBook(string orderBookId)
+        {
+            var orderBook = _orderBookRepository.GetById(orderBookId);
+
+            if (orderBook == null)
+                throw new HubException("OrderBook not found.");
+
+            await Clients.All.OpenedOrderBook(UserName, orderBook);
+        }
+
 
 
         /* ---------------------------------------------------------- */
@@ -152,6 +162,11 @@ namespace TradeSimulator.Backend.Hubs
             transactions.ForEach(transaction => Console.WriteLine(transaction.TickerDisplayName + ": " + transaction.Price));
 
             return transactions;
+        }
+
+        public async Task OpenTransactionHistory()
+        {
+            await Clients.All.OpenedTransactionHistory(UserName);
         }
 
 
