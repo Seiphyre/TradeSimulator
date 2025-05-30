@@ -1,7 +1,7 @@
 ﻿@page "/transactions/{BrokerId}"
 @inherits TransactionPageBase
 
-@if (_isLoading)
+@if (IsLoading)
 {
     <PageTitle>loading...</PageTitle>
 
@@ -13,7 +13,7 @@ else
 
     <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mb-8">Transactions</MudText>
 
-    <MudTable T="Transaction" Items="@_transactions" Hover="true" Breakpoint="Breakpoint.Xs">
+    <MudTable T="Transaction" Items="@Transactions" Hover="true" Breakpoint="Breakpoint.Xs">
 
         <HeaderContent>
             <MudTh>Time</MudTh>

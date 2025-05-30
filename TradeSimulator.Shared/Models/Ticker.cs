@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace TradeSimulator.Shared.Models
+﻿namespace TradeSimulator.Shared.Models
 {
     public class Ticker : EntityBase
     {

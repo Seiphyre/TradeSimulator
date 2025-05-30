@@ -7,19 +7,24 @@
 
     <base href="/" />
 
+    <!-- CSS isolation -->
     <link href="@Assets["TradeSimulator.Frontend.Blazor.styles.css"]" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MudBlazor CSS & fonts -->
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
 
     <ImportMap />
-    <HeadOutlet @rendermode="InteractiveServer" />
+    <HeadOutlet @rendermode="RenderMode.InteractiveServer" />
 </head>
 
 <body>
-    <Routes @rendermode="InteractiveServer" />
+    <Routes @rendermode="RenderMode.InteractiveServer" />
 
+    <!-- Blazor JS -->
     <script src="_framework/blazor.web.js"></script>
+
+    <!-- MudBlazor JS -->
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 

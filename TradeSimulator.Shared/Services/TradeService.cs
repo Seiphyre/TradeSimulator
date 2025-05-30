@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
+
+using Microsoft.AspNetCore.SignalR.Client;
+
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Utils;
+
+
 
 namespace TradeSimulator.Shared.Services
 {
@@ -15,13 +14,10 @@ namespace TradeSimulator.Shared.Services
 
     public class TradeService : IAsyncDisposable
     {
-        private HubConnection _hubConnection;
-
         public event OnCreateOrderBook OnCreateOrderBook;
         public event OnDeleteOrderBook OnDeleteOrderBook;
 
-
-        /* --------------------------------------------------------------- */
+        private HubConnection _hubConnection;
 
         public bool IsConnected
         {
@@ -71,6 +67,10 @@ namespace TradeSimulator.Shared.Services
             await _hubConnection.StopAsync();
         }
 
+
+
+        /* --------------------------------------------------------------- */
+
         public async Task<List<Ticker>> GetTickers()
         {
             return await _hubConnection.InvokeAsync<List<Ticker>>("GetAllTickers");
@@ -81,10 +81,18 @@ namespace TradeSimulator.Shared.Services
             return await _hubConnection.InvokeAsync<Ticker>("GetTickerById", tickerId);
         }
 
+
+
+        /* --------------------------------------------------------------- */
+
         public async Task<Broker> GetOrCreateBroker(string brokerId)
         {
             return await _hubConnection.InvokeAsync<Broker>("GetOrCreateBroker", brokerId);
         }
+
+
+
+        /* --------------------------------------------------------------- */
 
         public async Task<List<OrderBook>> GetOrderBooks(string brokerId = null)
         {
@@ -101,10 +109,16 @@ namespace TradeSimulator.Shared.Services
             await _hubConnection.InvokeAsync("DeleteOrderBook", orderBookId);
         }
 
+
+
+        /* --------------------------------------------------------------- */
+
         public async Task<List<Transaction>> GetTransactions(string brokerId = null)
         {
             return await _hubConnection.InvokeAsync<List<Transaction>>("GetTransactions", brokerId);
         }
+
+
 
         /* --------------------------------------------------------------- */
 

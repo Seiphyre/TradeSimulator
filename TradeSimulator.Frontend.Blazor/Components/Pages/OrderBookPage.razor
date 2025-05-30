@@ -1,7 +1,7 @@
 ﻿@page "/order-book/{TickerId}"
 @inherits OrderBookPageBase
 
-@if(_isLoading)
+@if(IsLoading)
 {
     <PageTitle>loading...</PageTitle>
 
@@ -9,11 +9,11 @@
 }
 else
 {
-    <PageTitle>@_ticker.DisplayName</PageTitle>
+    <PageTitle>@Ticker.DisplayName</PageTitle>
 
-    <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mb-8">Ticker: @_ticker.DisplayName</MudText>
+    <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mb-8">Ticker: @Ticker.DisplayName</MudText>
 
-    <MudTable Items="@_ticker.Orders" Hover="true" Breakpoint="Breakpoint.Xs">
+    <MudTable Items="@Ticker.Orders" Hover="true" Breakpoint="Breakpoint.Xs">
         <HeaderContent>
             <MudTh>Layer</MudTh>
             <MudTh>Price</MudTh>

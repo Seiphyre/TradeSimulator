@@ -1,12 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Threading.Tasks;
-using TradeSimulator.Shared.Models;
+
+using Microsoft.IdentityModel.Tokens;
+
+
 
 namespace TradeSimulator.Shared.Utils
 {
