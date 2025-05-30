@@ -1,0 +1,34 @@
+﻿@page "/transactions/{BrokerId}"
+@inherits TransactionPageBase
+
+@if (_isLoading)
+{
+    <PageTitle>loading...</PageTitle>
+
+    <Loader />
+}
+else
+{
+    <PageTitle>Transactions</PageTitle>
+
+    <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mb-8">Transactions</MudText>
+
+    <MudTable T="Transaction" Items="@_transactions" Hover="true" Breakpoint="Breakpoint.Xs">
+
+        <HeaderContent>
+            <MudTh>Time</MudTh>
+            <MudTh>Side</MudTh>
+            <MudTh>Ticker</MudTh>
+            <MudTh>Price</MudTh>
+            <MudTh>Quantity</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Time">@context.CreationDate</MudTd>
+            <MudTd DataLabel="Side">@context.TransactionType</MudTd>
+            <MudTd DataLabel="Ticker">@context.TickerDisplayName</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+        </RowTemplate>
+    </MudTable>
+}

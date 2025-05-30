@@ -86,7 +86,7 @@
                         <MudTd DataLabel="Layer">@(ticker.Orders?.Count ?? 0)</MudTd>
                         <MudTd DataLabel="">
                             <MudStack Row="true" Justify="Justify.FlexEnd" AlignItems="AlignItems.Center">
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => await OpenOrderBook(context))" Style="@style">Open</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => await OpenOrderBookPage(context))" Style="@style">Open</MudButton>
                                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await DeleteOrderBook(context.Id))" Style="@style" />
                             </MudStack>
                         </MudTd>
@@ -102,9 +102,9 @@
 
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-8">
         <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mt-8">Transactions</MudText>
-        @* <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@OpenTransactionBtn_OnClick>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@OpenTransactionBtn_OnClick>
             <MudText>Open in new tab</MudText>
-        </MudButton> *@
+        </MudButton>
     </MudStack>
 
     @if (Transactions != null && Transactions.Count > 0)
@@ -118,8 +118,8 @@
                 <MudTh>Price</MudTh>
                 <MudTh>Quantity</MudTh>
             </HeaderContent>
-            <RowTemplate>
 
+            <RowTemplate>
                 <MudTd DataLabel="Time">@context.CreationDate</MudTd>
                 <MudTd DataLabel="Side">@context.TransactionType</MudTd>
                 <MudTd DataLabel="Ticker">@context.TickerDisplayName</MudTd>

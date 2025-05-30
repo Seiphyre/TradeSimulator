@@ -210,11 +210,11 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
                 var newOrderBook = await CreateOrderBook(BrokerId, ticker.Id);
 
-                await OpenOrderBook(newOrderBook);
+                await OpenOrderBookPage(newOrderBook);
             }
         }
 
-        protected async Task OpenOrderBook(OrderBook orderBook)
+        protected async Task OpenOrderBookPage(OrderBook orderBook)
         {
             string url = Path.Combine(Navigation.BaseUri, "order-book", orderBook.TickerId);
 
@@ -236,9 +236,15 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         protected async Task GetTransactions()
         {
-            Transactions = await TradeService.GetTransactions();
+            Transactions = await TradeService.GetTransactions(BrokerId);
         }
 
+        protected async Task OpenTransactionsPage()
+        {
+            string url = Path.Combine(Navigation.BaseUri, "transactions", BrokerId);
+
+            await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        }
 
 
         /* ---------------------------------------------------------- */
@@ -303,7 +309,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         protected async void OpenTransactionBtn_OnClick()
         {
-
+            await OpenTransactionsPage();
         }
     }
 }

@@ -43,6 +43,8 @@ namespace TradeSimulator.Backend.Repositories
                     .Take(orderCount)
                     .Select(order => new Transaction()
                     {
+                        BrokerId = brokerId,
+
                         TickerDisplayName = ticker.DisplayName,
 
                         Price = order.Price,
