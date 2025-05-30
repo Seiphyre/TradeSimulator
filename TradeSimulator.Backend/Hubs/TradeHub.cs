@@ -44,12 +44,19 @@ namespace TradeSimulator.Backend.Hubs
 
         public IEnumerable<Ticker> GetTickers()
         {
-            return _tickerRepository.GetAll();
+            IEnumerable<Ticker> tickers = _tickerRepository.GetAll();
+
+            return tickers;
         }
 
         public Ticker GetTickerById(string id)
         {
-            return _tickerRepository.GetById(id);
+            Ticker ticker = _tickerRepository.GetById(id);
+
+            if (ticker is null)
+                throw new HubException("Ticker not found.");
+
+            return ticker;
         }
 
 
@@ -66,14 +73,14 @@ namespace TradeSimulator.Backend.Hubs
             return broker;
         }
 
-        public Broker GetBrokerById(string id)
+        private Broker GetBrokerById(string id)
         {
             var broker = _brokerRepository.GetById(id);
 
             return broker;
         }
 
-        public Broker CreateBroker(string id)
+        private Broker CreateBroker(string id)
         {
             var broker = _brokerRepository.Create(new Broker() { Id = id });
 
@@ -179,7 +186,9 @@ namespace TradeSimulator.Backend.Hubs
 
         public IEnumerable<Transaction> GetTransactions(string brokerId = null)
         {
-            return _transactionRepository.GetAll(brokerId);
+            IEnumerable<Transaction> transactions = _transactionRepository.GetAll(brokerId);
+
+            return transactions;
         }
 
         private List<Transaction> CreateRandomTransactionsForBroker(string brokerId, int tickerCount = 2, int transactionPerTicker = 3)
@@ -190,8 +199,6 @@ namespace TradeSimulator.Backend.Hubs
                 throw new HubException("Broker not found.");
 
             var transactions = _transactionRepository.CreateRandomTransactions(brokerId, tickerCount, transactionPerTicker);
-
-            transactions.ForEach(transaction => Console.WriteLine(transaction.TickerDisplayName + ": " + transaction.Price));
 
             return transactions;
         }

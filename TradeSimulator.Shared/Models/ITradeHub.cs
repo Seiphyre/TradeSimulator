@@ -10,8 +10,6 @@ namespace TradeSimulator.Shared.Models
 
 
         Broker GetOrCreateBroker(string id);
-        Broker GetBrokerById(string id);
-        Broker CreateBroker(string id);
 
 
 
