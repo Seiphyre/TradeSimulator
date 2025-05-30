@@ -121,7 +121,9 @@ namespace TradeSimulator.Backend.Hubs
             var orderbook = _orderBookRepository.Create(new OrderBook()
             {
                 BrokerId = brokerId,
-                TickerId = tickerId
+                TickerId = tickerId,
+
+                IsOpen = false
             });
 
             await Clients.All.CreatedOrderBook(UserName, orderbook);
@@ -148,6 +150,11 @@ namespace TradeSimulator.Backend.Hubs
             if (orderBook == null)
                 throw new HubException("OrderBook not found.");
 
+            if (orderBook.IsOpen)
+                return;
+
+            orderBook.IsOpen = true;
+
             await Clients.All.OpenedOrderBook(UserName, orderBook);
         }
 
@@ -157,6 +164,11 @@ namespace TradeSimulator.Backend.Hubs
 
             if (orderBook == null)
                 throw new HubException("OrderBook not found.");
+
+            if (!orderBook.IsOpen)
+                return;
+
+            orderBook.IsOpen = false;
 
             await Clients.All.ClosedOrderBook(UserName, orderBook);
         }
