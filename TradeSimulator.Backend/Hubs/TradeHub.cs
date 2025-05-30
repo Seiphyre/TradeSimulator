@@ -89,6 +89,16 @@ namespace TradeSimulator.Backend.Hubs
 
         /* ---------------------------------------------------------- */
 
+        public OrderBook GetOrderBook(string orderBookId)
+        {
+            var orderBook = _orderBookRepository.GetById(orderBookId);
+
+            if (orderBook == null)
+                throw new HubException("OrderBook not found.");
+
+            return orderBook;
+        }
+
         public IEnumerable<OrderBook> GetOrderBooks(string brokerId = null)
         {
             var orderbooks = _orderBookRepository.GetAll(brokerId);
@@ -141,6 +151,16 @@ namespace TradeSimulator.Backend.Hubs
             await Clients.All.OpenedOrderBook(UserName, orderBook);
         }
 
+        public async Task CloseOrderBook(string orderBookId)
+        {
+            var orderBook = _orderBookRepository.GetById(orderBookId);
+
+            if (orderBook == null)
+                throw new HubException("OrderBook not found.");
+
+            await Clients.All.ClosedOrderBook(UserName, orderBook);
+        }
+
 
 
         /* ---------------------------------------------------------- */
@@ -167,6 +187,11 @@ namespace TradeSimulator.Backend.Hubs
         public async Task OpenTransactionHistory()
         {
             await Clients.All.OpenedTransactionHistory(UserName);
+        }
+
+        public async Task CloseTransactionHistory()
+        {
+            await Clients.All.ClosedTransactionHistory(UserName);
         }
 
 

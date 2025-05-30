@@ -28,8 +28,10 @@ namespace TradeSimulator.Backend.Components.Pages
             TradeService.OnCreatedOrderBook += TradeService_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook += TradeService_OnDeleteOrderBook;
             TradeService.OnOpenedOrderBook += TradeService_OnOpenedOrderBook;
+            TradeService.OnClosedOrderBook += TradeService_OnClosedOrderBook;
 
             TradeService.OnOpenedTransactionHistory += TradeService_OnOpenedTransactionHistory;
+            TradeService.OnClosedTransactionHistory += TradeService_OnClosedTransactionHistory;
         }
 
         public void Dispose()
@@ -74,6 +76,11 @@ namespace TradeSimulator.Backend.Components.Pages
             AddMessage($"{username}: Has opened an order book ({orderBook.TickerId}).");
         }
 
+        private void TradeService_OnClosedOrderBook(string username, OrderBook orderBook)
+        {
+            AddMessage($"{username}: Has closed an order book ({orderBook.TickerId}).");
+        }
+
         private void TradeService_OnDisconnected(string username)
         {
             AddMessage($"{username}: Disconnected.");
@@ -86,7 +93,12 @@ namespace TradeSimulator.Backend.Components.Pages
 
         private void TradeService_OnOpenedTransactionHistory(string username)
         {
-            AddMessage($"{username}: Has opened its transaction history.");
+            AddMessage($"{username}: Has opened the transaction history.");
+        }
+
+        private void TradeService_OnClosedTransactionHistory(string username)
+        {
+            AddMessage($"{username}: Has closed the transaction history.");
         }
     }
 }

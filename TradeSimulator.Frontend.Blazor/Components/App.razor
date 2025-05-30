@@ -19,7 +19,8 @@
 </head>
 
 <body>
-    <Routes @rendermode="RenderMode.InteractiveServer" />
+    <!-- Note: Disabled prerender for a better control over order book/ transaction page open/close tracking logic -->
+    <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 
     <!-- Blazor JS -->
     <script src="_framework/blazor.web.js"></script>

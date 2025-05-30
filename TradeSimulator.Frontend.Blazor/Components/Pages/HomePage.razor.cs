@@ -216,11 +216,9 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         protected async Task OpenOrderBookPage(OrderBook orderBook)
         {
-            string url = Path.Combine(Navigation.BaseUri, "order-book", orderBook.TickerId);
+            string url = Path.Combine(Navigation.BaseUri, "order-book", orderBook.Id);
 
             await JSRuntime.InvokeVoidAsync("open", url, "_blank");
-
-            await TradeService.OpenOrderBook(orderBook.Id);
         }
 
 
@@ -246,8 +244,6 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             string url = Path.Combine(Navigation.BaseUri, "transactions", BrokerId);
 
             await JSRuntime.InvokeVoidAsync("open", url, "_blank");
-
-            await TradeService.OpenTransactionHistory();
         }
 
 

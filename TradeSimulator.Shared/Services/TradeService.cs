@@ -14,7 +14,9 @@ namespace TradeSimulator.Shared.Services
     public delegate void OnCreatedOrderBook(string username, OrderBook orderBook);
     public delegate void OnDeletedOrderBook(string username, OrderBook orderBook);
     public delegate void OnOpenedOrderBook(string username, OrderBook orderBook);
+    public delegate void OnClosedOrderBook(string username, OrderBook orderBook);
     public delegate void OnOpenedTransactionHistory(string username);
+    public delegate void OnClosedTransactionHistory(string username);
 
     public class TradeService : ITradeHubClient, IAsyncDisposable
     {
@@ -24,8 +26,10 @@ namespace TradeSimulator.Shared.Services
         public event OnCreatedOrderBook OnCreatedOrderBook;
         public event OnDeletedOrderBook OnDeletedOrderBook;
         public event OnOpenedOrderBook OnOpenedOrderBook;
+        public event OnClosedOrderBook OnClosedOrderBook;
 
         public event OnOpenedTransactionHistory OnOpenedTransactionHistory;
+        public event OnClosedTransactionHistory OnClosedTransactionHistory;
 
 
 
@@ -71,8 +75,10 @@ namespace TradeSimulator.Shared.Services
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.CreatedOrderBook), CreatedOrderBook);
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.DeletedOrderBook), DeletedOrderBook);
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.OpenedOrderBook), OpenedOrderBook);
+            _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.ClosedOrderBook), ClosedOrderBook);
 
             _hubConnection.On<string>(nameof(ITradeHubClient.OpenedTransactionHistory), OpenedTransactionHistory);
+            _hubConnection.On<string>(nameof(ITradeHubClient.ClosedTransactionHistory), ClosedTransactionHistory);
 
             // -- Start connection
 
@@ -111,6 +117,11 @@ namespace TradeSimulator.Shared.Services
 
         /* --------------------------------------------------------------- */
 
+        public async Task<OrderBook> GetOrderBook(string orderBookId)
+        {
+            return await _hubConnection.InvokeAsync<OrderBook>(nameof(ITradeHub.GetOrderBook), orderBookId);
+        }
+
         public async Task<List<OrderBook>> GetOrderBooks(string brokerId = null)
         {
             return await _hubConnection.InvokeAsync<List<OrderBook>>(nameof(ITradeHub.GetOrderBooks), brokerId);
@@ -131,6 +142,11 @@ namespace TradeSimulator.Shared.Services
             await _hubConnection.InvokeAsync(nameof(ITradeHub.OpenOrderBook), orderBookId);
         }
 
+        public async Task CloseOrderBook(string orderBookId)
+        {
+            await _hubConnection.InvokeAsync(nameof(ITradeHub.CloseOrderBook), orderBookId);
+        }
+
 
 
         /* --------------------------------------------------------------- */
@@ -143,6 +159,11 @@ namespace TradeSimulator.Shared.Services
         public async Task OpenTransactionHistory()
         {
             await _hubConnection.InvokeAsync(nameof(ITradeHub.OpenTransactionHistory));
+        }
+
+        public async Task CloseTransactionHistory()
+        {
+            await _hubConnection.InvokeAsync(nameof(ITradeHub.CloseTransactionHistory));
         }
 
 
@@ -196,9 +217,23 @@ namespace TradeSimulator.Shared.Services
             return Task.CompletedTask;
         }
 
+        public Task ClosedOrderBook(string username, OrderBook orderBook)
+        {
+            OnClosedOrderBook?.Invoke(username, orderBook);
+
+            return Task.CompletedTask;
+        }
+
         public Task OpenedTransactionHistory(string username)
         {
             OnOpenedTransactionHistory?.Invoke(username);
+
+            return Task.CompletedTask;
+        }
+
+        public Task ClosedTransactionHistory(string username)
+        {
+            OnClosedTransactionHistory?.Invoke(username);
 
             return Task.CompletedTask;
         }

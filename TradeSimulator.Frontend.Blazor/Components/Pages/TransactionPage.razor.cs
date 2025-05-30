@@ -5,7 +5,7 @@ using TradeSimulator.Shared.Services;
 
 namespace TradeSimulator.Frontend.Blazor.Components.Pages
 {
-    public class TransactionPageBase : ComponentBase
+    public class TransactionPageBase : ComponentBase, IAsyncDisposable
     {
         [Parameter] public string BrokerId { get; set; }
 
@@ -22,6 +22,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            Console.WriteLine("OnInitializedAsync");
             IsLoading = true;
 
             if (!TradeService.IsConnected)
@@ -29,7 +30,15 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
             Transactions = await TradeService.GetTransactions(BrokerId);
 
+            await TradeService.OpenTransactionHistory();
+
             IsLoading = false;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            Console.WriteLine("DisposeAsync");
+            await TradeService.CloseTransactionHistory();
         }
     }
 }

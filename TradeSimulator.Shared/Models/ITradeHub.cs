@@ -15,14 +15,17 @@ namespace TradeSimulator.Shared.Models
 
 
 
+        OrderBook GetOrderBook(string orderBookId);
         IEnumerable<OrderBook> GetOrderBooks(string brokerId = null);
         Task<OrderBook> CreateOrderBook(string brokerId, string tickerId);
         Task DeleteOrderBook(string orderBookId);
         Task OpenOrderBook(string orderBookId);
+        Task CloseOrderBook(string orderBookId);
 
 
 
         IEnumerable<Transaction> GetTransactions(string brokerId = null);
         Task OpenTransactionHistory();
+        Task CloseTransactionHistory();
     }
 }
