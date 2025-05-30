@@ -4,7 +4,7 @@ namespace TradeSimulator.Backend.Repositories
 {
     public class RepositoryBase<TEntity> where TEntity : IEntity<string>
     {
-        protected List<TEntity> Entities;
+        protected List<TEntity> Entities = new ();
 
 
 

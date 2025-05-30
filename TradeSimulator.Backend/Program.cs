@@ -61,6 +61,7 @@ namespace TradeSimulator.Backend
             builder.Services.AddSingleton<BrokerRepository>();
             builder.Services.AddSingleton<TickerRepository>();
             builder.Services.AddSingleton<OrderBookRepository>();
+            builder.Services.AddSingleton<TransactionRepository>();
 
             var app = builder.Build();
 

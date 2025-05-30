@@ -10,16 +10,18 @@ namespace TradeSimulator.Backend.Hubs
         private readonly TickerRepository _tickerRepository;
         private readonly BrokerRepository _brokerRepository;
         private readonly OrderBookRepository _orderBookRepository;
+        private readonly TransactionRepository _transactionRepository;
 
 
 
         /* ---------------------------------------------------------- */
 
-        public TradeHub(TickerRepository tickerRepository, BrokerRepository brokerRepository, OrderBookRepository orderBookRepository)
+        public TradeHub(TickerRepository tickerRepository, BrokerRepository brokerRepository, OrderBookRepository orderBookRepository, TransactionRepository transactionRepository)
         {
             _tickerRepository = tickerRepository;
             _brokerRepository = brokerRepository;
             _orderBookRepository = orderBookRepository;
+            _transactionRepository = transactionRepository;
         }
 
 
@@ -56,10 +58,17 @@ namespace TradeSimulator.Backend.Hubs
 
         public Broker GetOrCreateBroker(string id)
         {
-            var broker = _brokerRepository.GetById(id);
+            var broker = GetBrokerById(id);
 
             if (broker == null)
-                broker = _brokerRepository.Create(new Broker() { Id = id });
+                broker = CreateBroker(id);
+
+            return broker;
+        }
+
+        public Broker GetBrokerById(string id)
+        {
+            var broker = _brokerRepository.GetById(id);
 
             return broker;
         }
@@ -69,6 +78,18 @@ namespace TradeSimulator.Backend.Hubs
             var orderbooks = _orderBookRepository.GetAll(brokerId);
 
             return orderbooks;
+        }
+
+        public Broker CreateBroker(string id)
+        {
+            var broker = _brokerRepository.Create(new Broker() { Id = id });
+
+            if (broker != null)
+            {
+                CreateRandomTransactionsForBroker(broker.Id, tickerCount: 2, transactionPerTicker: 3);
+            }
+
+            return broker;
         }
 
 
@@ -110,6 +131,23 @@ namespace TradeSimulator.Backend.Hubs
             await Clients.All.SendAsync("OnDeleteOrderBook", orderBook);
         }
 
+
+
+        /* ---------------------------------------------------------- */
+
+        private List<Transaction> CreateRandomTransactionsForBroker(string brokerId, int tickerCount = 2, int transactionPerTicker = 3)
+        {
+            var Broker = _brokerRepository.GetById(brokerId);
+
+            if (Broker == null)
+                throw new HubException("Broker not found.");
+
+            var transactions = _transactionRepository.CreateRandomTransactions(brokerId, tickerCount, transactionPerTicker);
+
+            transactions.ForEach(transaction => Console.WriteLine(transaction.TickerDisplayName + ": " + transaction.Price));
+
+            return transactions;
+        }
 
 
         /* ---------------------------------------------------------- */
