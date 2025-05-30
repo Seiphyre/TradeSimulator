@@ -1,8 +1,6 @@
 ﻿@page "/order-book/{TickerId}"
 @inherits OrderBookPageBase
 
-<PageTitle>@(_isLoading ? "loading.." : _ticker.DisplayName)</PageTitle>
-
 @if(_isLoading)
 {
     <PageTitle>loading...</PageTitle>
@@ -27,5 +25,4 @@ else
             <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
         </RowTemplate>
     </MudTable>
-
 }
