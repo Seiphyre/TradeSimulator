@@ -1,9 +1,9 @@
 ﻿namespace TradeSimulator.Shared.Models
 {
-    public class OrderBook
+    public class OrderBook : EntityBase
     {
-        public int BrokerId { get; set; }
+        public string BrokerId { get; set; }
 
-        public int TickerId { get; set; }
+        public string TickerId { get; set; }
     }
 }

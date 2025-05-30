@@ -20,18 +20,23 @@ namespace TradeSimulator.Backend.Repositories
 
         public virtual List<TEntity> GetAll()
         {
+            if (Entities == null || Entities.Count == 0)
+                return new ();
+
             return new List<TEntity>(Entities);
         }
 
-        public virtual void Insert(TEntity entity)
+        public virtual TEntity Create(TEntity entity)
         {
             if (EqualityComparer<TEntity>.Default.Equals(entity, default))
-                return;
+                return default;
 
             if (Entities == null)
                 Entities = new();
 
             Entities.Add(entity);
+
+            return entity;
         }
 
         public virtual void Update(TEntity entity)
@@ -44,7 +49,7 @@ namespace TradeSimulator.Backend.Repositories
             if (!EqualityComparer<TEntity>.Default.Equals(cachedEntity, default))
                 Delete(cachedEntity.Id);
 
-            Insert(entity);
+            Create(entity);
         }
 
         public virtual void Delete(string id)

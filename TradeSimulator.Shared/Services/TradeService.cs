@@ -10,10 +10,15 @@ using TradeSimulator.Shared.Utils;
 
 namespace TradeSimulator.Shared.Services
 {
+    public delegate void OnCreateOrderBook(OrderBook orderBook);
+    public delegate void OnDeleteOrderBook(OrderBook orderBook);
+
     public class TradeService : IAsyncDisposable
     {
         private HubConnection _hubConnection;
 
+        public event OnCreateOrderBook OnCreateOrderBook;
+        public event OnDeleteOrderBook OnDeleteOrderBook;
 
 
         /* --------------------------------------------------------------- */
@@ -48,6 +53,16 @@ namespace TradeSimulator.Shared.Services
                 .WithAutomaticReconnect()
                 .Build();
 
+            _hubConnection.On<OrderBook>("OnCreateOrderBook", (orderBook) =>
+            {
+                OnCreateOrderBook?.Invoke(orderBook);
+            });
+
+            _hubConnection.On<OrderBook>("OnDeleteOrderBook", (orderBook) =>
+            {
+                OnDeleteOrderBook?.Invoke(orderBook);
+            });
+
             await _hubConnection.StartAsync();
         }
 
@@ -66,6 +81,25 @@ namespace TradeSimulator.Shared.Services
             return await _hubConnection.InvokeAsync<Ticker>("GetTickerById", tickerId);
         }
 
+        public async Task<Broker> GetOrCreateBroker(string brokerId)
+        {
+            return await _hubConnection.InvokeAsync<Broker>("GetOrCreateBroker", brokerId);
+        }
+
+        public async Task<List<OrderBook>> GetOrderBooks(string brokerId = null)
+        {
+            return await _hubConnection.InvokeAsync<List<OrderBook>>("GetOrderBooks", brokerId);
+        }
+
+        public async Task<OrderBook> CreateOrderBook(string brokerId, string tickerId)
+        {
+            return await _hubConnection.InvokeAsync<OrderBook>("CreateOrderBook", brokerId, tickerId);
+        }
+
+        public async Task DeleteOrderBook(string orderBookId)
+        {
+            await _hubConnection.InvokeAsync("DeleteOrderBook", orderBookId);
+        }
 
         /* --------------------------------------------------------------- */
 
