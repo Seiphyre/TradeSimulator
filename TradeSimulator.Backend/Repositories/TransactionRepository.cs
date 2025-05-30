@@ -12,6 +12,19 @@ namespace TradeSimulator.Backend.Repositories
             _tickerRepository = tickerRepository;
         }
 
+        public virtual List<Transaction> GetAll(string brokerId = null)
+        {
+            if (Entities == null || Entities.Count == 0)
+                return new List<Transaction>();
+
+            IEnumerable<Transaction> entities = new List<Transaction>(Entities);
+
+            if (brokerId != null)
+                entities = entities.Where(entity => entity.BrokerId == brokerId);
+
+            return entities.ToList();
+        }
+
         public List<Transaction> CreateRandomTransactions(string brokerId, int tickerCount = 2, int transactionPerTicker = 3)
         {
             List<Ticker> tickers = _tickerRepository.GetAll();

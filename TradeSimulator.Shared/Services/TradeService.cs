@@ -101,6 +101,11 @@ namespace TradeSimulator.Shared.Services
             await _hubConnection.InvokeAsync("DeleteOrderBook", orderBookId);
         }
 
+        public async Task<List<Transaction>> GetTransactions(string brokerId = null)
+        {
+            return await _hubConnection.InvokeAsync<List<Transaction>>("GetTransactions", brokerId);
+        }
+
         /* --------------------------------------------------------------- */
 
         public async ValueTask DisposeAsync()

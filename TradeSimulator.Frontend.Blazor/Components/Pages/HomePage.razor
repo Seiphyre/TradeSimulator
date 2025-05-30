@@ -99,4 +99,37 @@
     {
         <MudText Typo="Typo.body1">Your order book list is empty. Click "New Order Book" to create your first order book.</MudText>
     }
+
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-8">
+        <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mt-8">Transactions</MudText>
+        @* <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@OpenTransactionBtn_OnClick>
+            <MudText>Open in new tab</MudText>
+        </MudButton> *@
+    </MudStack>
+
+    @if (Transactions != null && Transactions.Count > 0)
+    {
+        <MudTable T="Transaction" Items="@Transactions" Hover="true" Breakpoint="Breakpoint.Xs">
+
+            <HeaderContent>
+                <MudTh>Time</MudTh>
+                <MudTh>Side</MudTh>
+                <MudTh>Ticker</MudTh>
+                <MudTh>Price</MudTh>
+                <MudTh>Quantity</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+
+                <MudTd DataLabel="Time">@context.CreationDate</MudTd>
+                <MudTd DataLabel="Side">@context.TransactionType</MudTd>
+                <MudTd DataLabel="Ticker">@context.TickerDisplayName</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
+                <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">No transactions</MudText>
+    }
 }

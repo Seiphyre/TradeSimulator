@@ -51,6 +51,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
         protected Broker Broker;
         protected List<Ticker> Tickers;
         protected List<OrderBook> OrderBooks;
+        protected List<Transaction> Transactions;
 
         protected OrderBook HoveredOrderBook = null;
 
@@ -233,6 +234,15 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         /* ---------------------------------------------------------- */
 
+        protected async Task GetTransactions()
+        {
+            Transactions = await TradeService.GetTransactions();
+        }
+
+
+
+        /* ---------------------------------------------------------- */
+
         protected async void ConnectBtn_OnClick()
         {
             await Connect();
@@ -240,8 +250,11 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             // --
 
             await GetOrCreateBroker();
-            await GetOrderBooks();
             await GetTickers();
+            await GetOrderBooks();
+            await GetTransactions();
+
+            StateHasChanged();
         }
 
         protected async void DisconnectBtn_OnClick()
@@ -284,6 +297,13 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
         protected void OrderBookTable_OnRowMouseLeave(TableRowHoverEventArgs<OrderBook> eventArgs)
         {
             HoveredOrderBook = null;
+        }
+
+        // --
+
+        protected async void OpenTransactionBtn_OnClick()
+        {
+
         }
     }
 }

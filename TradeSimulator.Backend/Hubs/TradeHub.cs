@@ -135,6 +135,11 @@ namespace TradeSimulator.Backend.Hubs
 
         /* ---------------------------------------------------------- */
 
+        public IEnumerable<Transaction> GetTransactions(string brokerId = null)
+        {
+            return _transactionRepository.GetAll(brokerId);
+        }
+
         private List<Transaction> CreateRandomTransactionsForBroker(string brokerId, int tickerCount = 2, int transactionPerTicker = 3)
         {
             var Broker = _brokerRepository.GetById(brokerId);
