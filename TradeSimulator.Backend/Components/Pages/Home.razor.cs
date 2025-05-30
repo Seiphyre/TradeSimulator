@@ -5,82 +5,80 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using TradeSimulator.Backend.Hubs;
+using TradeSimulator.Shared.Models;
+using TradeSimulator.Shared.Services;
 
 namespace TradeSimulator.Backend.Components.Pages
 {
-    public class HomeBase : ComponentBase
+    public class HomeBase : ComponentBase, IDisposable
     {
-        private readonly string _defaultHubURL = "http://localhost:5038/trade-hub";
-
         [Inject] NavigationManager Navigation { get; set; }
+        [Inject] TradeService TradeService { get; set; }
 
-        protected HubConnection hubConnection;
-        protected List<string> Messages = [];
+        protected List<string> Messages = new();
 
-        protected string UserName = "Server";
+
+
+        /* -------------------------------------------------------------------- */
 
         protected override async Task OnInitializedAsync()
         {
-            await Connect();
+            if (!TradeService.IsConnected)
+                await TradeService.Connect(Path.Combine(Navigation.BaseUri, "trade-hub"), "Server");
+
+            TradeService.OnConnected += TradeService_OnConnected;
+            TradeService.OnDisconnected += TradeService_OnDisconnected;
+            TradeService.OnCreateOrderBook += TradeService_OnCreateOrderBook;
+            TradeService.OnDeleteOrderBook += TradeService_OnDeleteOrderBook;
         }
 
-        protected async Task Connect()
+        public void Dispose()
         {
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(_defaultHubURL, options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(GenerateJwtToken());
-                })
-                .WithAutomaticReconnect()
-                .Build();
+            TradeService.OnConnected -= TradeService_OnConnected;
+            TradeService.OnDisconnected -= TradeService_OnDisconnected;
+            TradeService.OnCreateOrderBook -= TradeService_OnCreateOrderBook;
+            TradeService.OnDeleteOrderBook -= TradeService_OnDeleteOrderBook;
 
-            hubConnection.On<string, string>("OnConnected", (user, message) =>
-            {
-                if (user == UserName)
-                    return;
-
-                var encodedMsg = $"{user}: {message}";
-                Messages.Add(encodedMsg);
-
-                InvokeAsync(StateHasChanged);
-            });
-
-            hubConnection.On<string, string>("OnDisconnected", (user, message) =>
-            {
-                if (user == UserName)
-                    return;
-
-                var encodedMsg = $"{user}: {message}";
-                Messages.Add(encodedMsg);
-
-                InvokeAsync(StateHasChanged);
-            });
-
-            await hubConnection.StartAsync();
         }
 
-        private string GenerateJwtToken()
+
+
+        /* -------------------------------------------------------------------- */
+
+        private void AddMessage(string message)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("70686367d1ce87264121d74a5abec5eeae3f54c70f0204017b9ab758e69a7e8d"));
+            Messages.Add(message);
 
-            var token = new JwtSecurityToken(
-                claims: new List<Claim>() { new Claim(ClaimTypes.Name, UserName) },
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            InvokeAsync(StateHasChanged);
         }
 
-        public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
 
-        public bool IsDisconnected => hubConnection?.State == HubConnectionState.Disconnected;
 
-        public async ValueTask DisposeAsync()
+        /* -------------------------------------------------------------------- */
+
+        private void TradeService_OnDeleteOrderBook(string username, Shared.Models.OrderBook orderBook)
         {
-            if (hubConnection is not null)
-            {
-                await hubConnection.DisposeAsync();
-            }
+            AddMessage($"{username}: Has deleted an order book ({orderBook.TickerId}).");
+        }
+
+        private void TradeService_OnCreateOrderBook(string username, Shared.Models.OrderBook orderBook)
+        {
+            AddMessage($"{username}: Has created an order book ({orderBook.TickerId}).");
+        }
+
+        private void TradeService_OnDisconnected(string username)
+        {
+            Console.WriteLine("Disconnected");
+
+            AddMessage($"{username}: Disconnected.");
+        }
+
+        private void TradeService_OnConnected(string username)
+        {
+            Console.WriteLine("Connected");
+
+            AddMessage($"{username}: Connected.");
         }
     }
 }

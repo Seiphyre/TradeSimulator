@@ -5,6 +5,7 @@ using System.Text;
 using TradeSimulator.Backend.Components;
 using TradeSimulator.Backend.Hubs;
 using TradeSimulator.Backend.Repositories;
+using TradeSimulator.Shared.Services;
 
 namespace TradeSimulator.Backend
 {
@@ -57,6 +58,8 @@ namespace TradeSimulator.Backend
             });
 
             builder.Services.AddMudServices();
+
+            builder.Services.AddSingleton<TradeService>();
 
             builder.Services.AddSingleton<BrokerRepository>();
             builder.Services.AddSingleton<TickerRepository>();

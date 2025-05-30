@@ -58,6 +58,8 @@ namespace TradeSimulator.Shared.Services
 
             // -- Subscribe to hub messages 
 
+            _hubConnection.On<string>(nameof(ITradeHubClient.Connected), Connected);
+            _hubConnection.On<string>(nameof(ITradeHubClient.Disconnected), Disconnected);
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.CreatedOrderBook), CreatedOrderBook);
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.DeletedOrderBook), DeletedOrderBook);
 
