@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+
 using TradeSimulator.Backend.Repositories;
 using TradeSimulator.Shared.Models;
 

@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using TradeSimulator.Backend.Hubs;
-using TradeSimulator.Shared.Models;
+
 using TradeSimulator.Shared.Services;
+
+
 
 namespace TradeSimulator.Backend.Components.Pages
 {
