@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 using TradeSimulator.Backend.Repositories;
 using TradeSimulator.Shared.Models;
 
 namespace TradeSimulator.Backend.Hubs
 {
-    public class TradeHub : Hub
+    public class TradeHub : Hub<ITradeHubClient>, ITradeHub
     {
         private readonly TickerRepository _tickerRepository;
         private readonly BrokerRepository _brokerRepository;
@@ -30,19 +29,19 @@ namespace TradeSimulator.Backend.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("OnConnected", UserName, "Connected");
+            await Clients.Others.Connected(UserName);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Clients.All.SendAsync("OnDisconnected", UserName, "Disconnected");
+            await Clients.Others.Disconnected(UserName);
         }
 
 
 
         /* ---------------------------------------------------------- */
 
-        public IEnumerable<Ticker> GetAllTickers()
+        public IEnumerable<Ticker> GetTickers()
         {
             return _tickerRepository.GetAll();
         }
@@ -73,13 +72,6 @@ namespace TradeSimulator.Backend.Hubs
             return broker;
         }
 
-        public List<OrderBook> GetOrderBooks(string brokerId = null)
-        {
-            var orderbooks = _orderBookRepository.GetAll(brokerId);
-
-            return orderbooks;
-        }
-
         public Broker CreateBroker(string id)
         {
             var broker = _brokerRepository.Create(new Broker() { Id = id });
@@ -95,6 +87,13 @@ namespace TradeSimulator.Backend.Hubs
 
 
         /* ---------------------------------------------------------- */
+
+        public IEnumerable<OrderBook> GetOrderBooks(string brokerId = null)
+        {
+            var orderbooks = _orderBookRepository.GetAll(brokerId);
+
+            return orderbooks;
+        }
 
         public async Task<OrderBook> CreateOrderBook(string brokerId, string tickerId)
         {
@@ -114,7 +113,7 @@ namespace TradeSimulator.Backend.Hubs
                 TickerId = tickerId
             });
 
-            await Clients.All.SendAsync("OnCreateOrderBook", orderbook);
+            await Clients.All.CreatedOrderBook(UserName, orderbook);
 
             return orderbook;
         }
@@ -128,7 +127,7 @@ namespace TradeSimulator.Backend.Hubs
 
             _orderBookRepository.Delete(orderBook.Id);
 
-            await Clients.All.SendAsync("OnDeleteOrderBook", orderBook);
+            await Clients.All.DeletedOrderBook(UserName, orderBook);
         }
 
 

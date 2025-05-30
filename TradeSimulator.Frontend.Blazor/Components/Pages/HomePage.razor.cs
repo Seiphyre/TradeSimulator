@@ -270,7 +270,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
 
         // --
 
-        protected async void TradeHub_OnCreateOrderBook(OrderBook orderBook)
+        protected async void TradeHub_OnCreateOrderBook(string username, OrderBook orderBook)
         {
             await InvokeAsync(() => 
             {
@@ -279,7 +279,7 @@ namespace TradeSimulator.Frontend.Blazor.Components.Pages
             });
         }
 
-        protected async void TradeHub_OnDeleteOrderBook(OrderBook orderBook)
+        protected async void TradeHub_OnDeleteOrderBook(string username, OrderBook orderBook)
         {
             await InvokeAsync(() =>
             {

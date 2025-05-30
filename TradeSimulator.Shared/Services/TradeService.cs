@@ -9,11 +9,16 @@ using TradeSimulator.Shared.Utils;
 
 namespace TradeSimulator.Shared.Services
 {
-    public delegate void OnCreateOrderBook(OrderBook orderBook);
-    public delegate void OnDeleteOrderBook(OrderBook orderBook);
+    public delegate void OnConnected(string username);
+    public delegate void OnDisconnected(string username);
+    public delegate void OnCreateOrderBook(string username, OrderBook orderBook);
+    public delegate void OnDeleteOrderBook(string username, OrderBook orderBook);
 
-    public class TradeService : IAsyncDisposable
+    public class TradeService : ITradeHubClient, IAsyncDisposable
     {
+        public event OnConnected OnConnected;
+        public event OnDisconnected OnDisconnected;
+
         public event OnCreateOrderBook OnCreateOrderBook;
         public event OnDeleteOrderBook OnDeleteOrderBook;
 
@@ -33,6 +38,8 @@ namespace TradeSimulator.Shared.Services
 
         public async Task Connect(string url, string username)
         {
+            // -- Build connection
+
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(url, options =>
                 {
@@ -49,15 +56,12 @@ namespace TradeSimulator.Shared.Services
                 .WithAutomaticReconnect()
                 .Build();
 
-            _hubConnection.On<OrderBook>("OnCreateOrderBook", (orderBook) =>
-            {
-                OnCreateOrderBook?.Invoke(orderBook);
-            });
+            // -- Subscribe to hub messages 
 
-            _hubConnection.On<OrderBook>("OnDeleteOrderBook", (orderBook) =>
-            {
-                OnDeleteOrderBook?.Invoke(orderBook);
-            });
+            _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.CreatedOrderBook), CreatedOrderBook);
+            _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.DeletedOrderBook), DeletedOrderBook);
+
+            // -- Start connection
 
             await _hubConnection.StartAsync();
         }
@@ -73,12 +77,12 @@ namespace TradeSimulator.Shared.Services
 
         public async Task<List<Ticker>> GetTickers()
         {
-            return await _hubConnection.InvokeAsync<List<Ticker>>("GetAllTickers");
+            return await _hubConnection.InvokeAsync<List<Ticker>>(nameof(ITradeHub.GetTickers));
         }
 
         public async Task<Ticker> GetTickerById(string tickerId)
         {
-            return await _hubConnection.InvokeAsync<Ticker>("GetTickerById", tickerId);
+            return await _hubConnection.InvokeAsync<Ticker>(nameof(ITradeHub.GetTickerById), tickerId);
         }
 
 
@@ -87,7 +91,7 @@ namespace TradeSimulator.Shared.Services
 
         public async Task<Broker> GetOrCreateBroker(string brokerId)
         {
-            return await _hubConnection.InvokeAsync<Broker>("GetOrCreateBroker", brokerId);
+            return await _hubConnection.InvokeAsync<Broker>(nameof(ITradeHub.GetOrCreateBroker), brokerId);
         }
 
 
@@ -96,17 +100,17 @@ namespace TradeSimulator.Shared.Services
 
         public async Task<List<OrderBook>> GetOrderBooks(string brokerId = null)
         {
-            return await _hubConnection.InvokeAsync<List<OrderBook>>("GetOrderBooks", brokerId);
+            return await _hubConnection.InvokeAsync<List<OrderBook>>(nameof(ITradeHub.GetOrderBooks), brokerId);
         }
 
         public async Task<OrderBook> CreateOrderBook(string brokerId, string tickerId)
         {
-            return await _hubConnection.InvokeAsync<OrderBook>("CreateOrderBook", brokerId, tickerId);
+            return await _hubConnection.InvokeAsync<OrderBook>(nameof(ITradeHub.CreateOrderBook), brokerId, tickerId);
         }
 
         public async Task DeleteOrderBook(string orderBookId)
         {
-            await _hubConnection.InvokeAsync("DeleteOrderBook", orderBookId);
+            await _hubConnection.InvokeAsync(nameof(ITradeHub.DeleteOrderBook), orderBookId);
         }
 
 
@@ -115,7 +119,7 @@ namespace TradeSimulator.Shared.Services
 
         public async Task<List<Transaction>> GetTransactions(string brokerId = null)
         {
-            return await _hubConnection.InvokeAsync<List<Transaction>>("GetTransactions", brokerId);
+            return await _hubConnection.InvokeAsync<List<Transaction>>(nameof(ITradeHub.GetTransactions), brokerId);
         }
 
 
@@ -129,5 +133,41 @@ namespace TradeSimulator.Shared.Services
                 await _hubConnection.DisposeAsync();
             }
         }
+
+
+
+        /* --------------------------------------------------------------- */
+
+        public Task Connected(string username)
+        {
+            OnConnected?.Invoke(username);
+
+            return Task.CompletedTask;
+        }
+
+        public Task Disconnected(string username)
+        {
+            OnDisconnected?.Invoke(username);
+
+            return Task.CompletedTask;
+        }
+
+        public Task CreatedOrderBook(string username, OrderBook orderBook)
+        {
+            OnCreateOrderBook?.Invoke(username, orderBook);
+
+            return Task.CompletedTask;
+        }
+
+        public Task DeletedOrderBook(string username, OrderBook orderBook)
+        {
+            OnDeleteOrderBook?.Invoke(username, orderBook);
+
+            return Task.CompletedTask;
+        }
+
+
+
+        /* --------------------------------------------------------------- */
     }
 }
