@@ -4,14 +4,18 @@
 <PageTitle>Trade Simulator</PageTitle>
 
 <MudText Typo="Typo.h2" Align="Align.Center" GutterBottom="true">Trade Simulator</MudText>
-<MudText Typo="Typo.body1">
+
+<MudText Typo="Typo.body1" GutterBottom="true">
     This application has been made with Blazor, MudBlazor and SignalR. It require a connection to the server app to work.
+</MudText>
+
+<MudText Typo="Typo.body1" GutterBottom="true">
     Choose a broker name and hit the connect button to start trading. Each broker has its own order books and a transaction history.
     Open an order book to see the orders of the ticker of your choice.
 </MudText>
 
 <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Class="mt-8">
-    <MudTextField @bind-Value="BrokerId" Label="Broker Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="@IsConnected"></MudTextField>
+    <MudTextField @bind-Value="BrokerId" Label="Broker name" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="@IsConnected" Class="mb-2"></MudTextField>
     @if (!IsConnected)
     {
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Disabled="@(IsConnected || IsConnecting)" OnClick=@ConnectBtn_OnClick>
@@ -45,7 +49,7 @@
 @if (IsConnected)
 {
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-8">
-        <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mt-8">Order books</MudText>
+        <MudText Typo="Typo.h5" Align="Align.Left">Order books</MudText>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@CreateOrderBookBtn_OnClick>
             <MudText>New Order Book</MudText>
         </MudButton>
@@ -53,7 +57,7 @@
 
     @if (OrderBooks != null && OrderBooks.Count > 0)
     {
-        <MudTable T="OrderBook" Items="@OrderBooks" Hover="true" OnRowMouseEnter=@OrderBookTable_OnRowMouseEnter OnRowMouseLeave="OrderBookTable_OnRowMouseLeave" Breakpoint="Breakpoint.Xs">
+        <MudTable Class="mt-4" T="OrderBook" Items="@OrderBooks" Hover="true" OnRowMouseEnter=@OrderBookTable_OnRowMouseEnter OnRowMouseLeave="OrderBookTable_OnRowMouseLeave" Breakpoint="Breakpoint.Xs">
             <ColGroup>
                 <col />
                 <col />
@@ -87,11 +91,11 @@
     }
     else
     {
-        <MudText Typo="Typo.body1">Your order book list is empty. Click "New Order Book" to create your first order book.</MudText>
+        <MudText Typo="Typo.body1" Class="mt-4">Your order book list is empty. Click "New Order Book" to create your first order book.</MudText>
     }
 
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-8">
-        <MudText Typo="Typo.h5" Align="Align.Left" GutterBottom="true" Class="mt-8">Transactions</MudText>
+        <MudText Typo="Typo.h5" Align="Align.Left">Transactions</MudText>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick=@OpenTransactionBtn_OnClick>
             <MudText>Open in new tab</MudText>
         </MudButton>
@@ -99,7 +103,7 @@
 
     @if (Transactions != null && Transactions.Count > 0)
     {
-        <MudTable T="Transaction" Items="@Transactions" Hover="true" Breakpoint="Breakpoint.Xs">
+        <MudTable Class="mt-4" T="Transaction" Items="@Transactions" Hover="true" Breakpoint="Breakpoint.Xs">
 
             <HeaderContent>
                 <MudTh>Time</MudTh>
@@ -120,6 +124,6 @@
     }
     else
     {
-        <MudText Typo="Typo.body1">No transactions</MudText>
+        <MudText Typo="Typo.body1" Class="mt-4">No transactions</MudText>
     }
 }
