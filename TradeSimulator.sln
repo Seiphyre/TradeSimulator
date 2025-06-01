@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulator.Frontend.Bla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulator.Shared", "TradeSimulator.Shared\TradeSimulator.Shared.csproj", "{568388FE-60C4-40B9-A5E2-2FE1124ADD2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulator.Frontend.WPF", "TradeSimulator.Frontend.WPF\TradeSimulator.Frontend.WPF.csproj", "{08D3F1C4-D450-47B9-B3AE-1B174FA9D2D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{568388FE-60C4-40B9-A5E2-2FE1124ADD2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568388FE-60C4-40B9-A5E2-2FE1124ADD2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{568388FE-60C4-40B9-A5E2-2FE1124ADD2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D3F1C4-D450-47B9-B3AE-1B174FA9D2D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D3F1C4-D450-47B9-B3AE-1B174FA9D2D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D3F1C4-D450-47B9-B3AE-1B174FA9D2D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D3F1C4-D450-47B9-B3AE-1B174FA9D2D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

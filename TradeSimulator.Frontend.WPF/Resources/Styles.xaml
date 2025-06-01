@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="UnfocusableRow" TargetType="DataGridRow">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="white" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="BorderBrush" Value="white" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="UnfocusableCell" TargetType="DataGridCell">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="8,8,8,8" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="white" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="BorderBrush" Value="white" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="UnfocusableHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="Padding" Value="8,8,8,8" />
+    </Style>
+
+</ResourceDictionary>
