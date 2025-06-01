@@ -31,6 +31,7 @@ namespace TradeSimulator.Frontend.WPF
 
         private ReconnectingDialog ReconnectingDialog = null;
 
+        private List<Window> windows = new();
 
 
         public MainWindow()
@@ -138,6 +139,8 @@ namespace TradeSimulator.Frontend.WPF
                 BrokerIdTextBox.IsEnabled = true;
                 Dashboard.Visibility = Visibility.Collapsed;
 
+                CloseAllSubWindows();
+
                 Console.WriteLine("Disconnected.");
             }
             catch (Exception exception)
@@ -239,7 +242,21 @@ namespace TradeSimulator.Frontend.WPF
             var orderBookTicker = Tickers.FirstOrDefault(ticker => ticker.Id == orderBook.TickerId);
 
             var window = new OrderBookWindow(TradeService, orderBook, orderBookTicker);
+
             window.Show();
+        }
+
+        public void CloseAllSubWindows()
+        {
+            for (int intCounter = App.Current.Windows.Count - 1; intCounter >= 0; intCounter--)
+            {
+                var window = App.Current.Windows[intCounter];
+
+                if (window == this)
+                    continue;
+
+                window.Close();
+            }
         }
 
 
