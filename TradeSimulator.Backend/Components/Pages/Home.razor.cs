@@ -30,6 +30,7 @@ namespace TradeSimulator.Backend.Components.Pages
             TradeService.OnOpenedOrderBook += TradeService_OnOpenedOrderBook;
             TradeService.OnClosedOrderBook += TradeService_OnClosedOrderBook;
 
+            TradeService.OnCreatedTransaction += TradeService_OnCreatedTransaction; ;
             TradeService.OnOpenedTransactionHistory += TradeService_OnOpenedTransactionHistory;
             TradeService.OnClosedTransactionHistory += TradeService_OnClosedTransactionHistory;
         }
@@ -42,8 +43,11 @@ namespace TradeSimulator.Backend.Components.Pages
             TradeService.OnCreatedOrderBook -= TradeService_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook -= TradeService_OnDeleteOrderBook;
             TradeService.OnOpenedOrderBook -= TradeService_OnOpenedOrderBook;
+            TradeService.OnClosedOrderBook -= TradeService_OnClosedOrderBook;
 
+            TradeService.OnCreatedTransaction -= TradeService_OnCreatedTransaction; ;
             TradeService.OnOpenedTransactionHistory -= TradeService_OnOpenedTransactionHistory;
+            TradeService.OnClosedTransactionHistory -= TradeService_OnClosedTransactionHistory;
         }
 
 
@@ -89,6 +93,14 @@ namespace TradeSimulator.Backend.Components.Pages
         private void TradeService_OnConnected(string username)
         {
             AddMessage($"{username}: Connected.");
+        }
+
+        private void TradeService_OnCreatedTransaction(string username, Transaction transaction)
+        {
+            string buyOrSell = transaction.TransactionType == TransactionType.Buy ? "bought":"sold";
+            string message = $"{username}: Has {buyOrSell} {transaction.Quantity} stocks for {transaction.Price} dollars with ticker named {transaction.TickerDisplayName}";
+
+            AddMessage(message);
         }
 
         private void TradeService_OnOpenedTransactionHistory(string username)
