@@ -53,5 +53,15 @@ namespace TradeSimulator.Frontend.WPF
             if (TradeService != null && TradeService.IsConnected)
                 await TradeService.CloseOrderBook(OrderBook.Id);
         }
+
+        private async void TradeRowBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            Order order = ((FrameworkElement)sender).DataContext as Order;
+
+            if (TradeService != null && TradeService.IsConnected)
+            {
+                await TradeService.CreateTransaction(OrderBook.BrokerId, Ticker.DisplayName, order.Price, order.Quantity, order.TransactionType);
+            }
+        }
     }
 }

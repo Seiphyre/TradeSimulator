@@ -10,6 +10,7 @@
         Task OpenedOrderBook(string username, OrderBook orderBook);
         Task ClosedOrderBook(string username, OrderBook orderBook);
 
+        Task CreatedTransaction(string username, Transaction transaction);
         Task OpenedTransactionHistory(string username);
         Task ClosedTransactionHistory(string username);
     }

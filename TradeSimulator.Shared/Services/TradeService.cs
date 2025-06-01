@@ -11,10 +11,13 @@ namespace TradeSimulator.Shared.Services
 {
     public delegate void OnConnected(string username);
     public delegate void OnDisconnected(string username);
+    public delegate void OnReconnecting();
+    public delegate void OnReconnected();
     public delegate void OnCreatedOrderBook(string username, OrderBook orderBook);
     public delegate void OnDeletedOrderBook(string username, OrderBook orderBook);
     public delegate void OnOpenedOrderBook(string username, OrderBook orderBook);
     public delegate void OnClosedOrderBook(string username, OrderBook orderBook);
+    public delegate void OnCreatedTransaction(string username, Transaction transaction);
     public delegate void OnOpenedTransactionHistory(string username);
     public delegate void OnClosedTransactionHistory(string username);
 
@@ -22,14 +25,15 @@ namespace TradeSimulator.Shared.Services
     {
         public event OnConnected OnConnected;
         public event OnDisconnected OnDisconnected;
-        public event Action OnReconnecting;
-        public event Action OnReconnected;
+        public event OnReconnecting OnReconnecting;
+        public event OnReconnected OnReconnected;
 
         public event OnCreatedOrderBook OnCreatedOrderBook;
         public event OnDeletedOrderBook OnDeletedOrderBook;
         public event OnOpenedOrderBook OnOpenedOrderBook;
         public event OnClosedOrderBook OnClosedOrderBook;
 
+        public event OnCreatedTransaction OnCreatedTransaction;
         public event OnOpenedTransactionHistory OnOpenedTransactionHistory;
         public event OnClosedTransactionHistory OnClosedTransactionHistory;
 
@@ -82,10 +86,11 @@ namespace TradeSimulator.Shared.Services
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.OpenedOrderBook), OpenedOrderBook);
             _hubConnection.On<string, OrderBook>(nameof(ITradeHubClient.ClosedOrderBook), ClosedOrderBook);
 
+            _hubConnection.On<string, Transaction>(nameof(ITradeHubClient.CreatedTransaction), CreatedTransaction);
             _hubConnection.On<string>(nameof(ITradeHubClient.OpenedTransactionHistory), OpenedTransactionHistory);
             _hubConnection.On<string>(nameof(ITradeHubClient.ClosedTransactionHistory), ClosedTransactionHistory);
-            _hubConnection.Reconnecting += _hubConnection_Reconnecting;
-            _hubConnection.Reconnected += _hubConnection_Reconnected;
+            _hubConnection.Reconnecting += Reconnecting;
+            _hubConnection.Reconnected += Reconnected;
 
             // -- Start connection
 
@@ -163,6 +168,11 @@ namespace TradeSimulator.Shared.Services
             return await _hubConnection.InvokeAsync<List<Transaction>>(nameof(ITradeHub.GetTransactions), brokerId);
         }
 
+        public async Task<Transaction> CreateTransaction(string brokerId, string tickerDisplayName, decimal price, int quantity, TransactionType transactionType)
+        {
+            return await _hubConnection.InvokeAsync<Transaction>(nameof(ITradeHub.CreateTransaction), brokerId, tickerDisplayName, price, quantity, transactionType);
+        }
+
         public async Task OpenTransactionHistory()
         {
             await _hubConnection.InvokeAsync(nameof(ITradeHub.OpenTransactionHistory));
@@ -203,14 +213,14 @@ namespace TradeSimulator.Shared.Services
             return Task.CompletedTask;
         }
 
-        private Task _hubConnection_Reconnected(string arg)
+        private Task Reconnected(string arg)
         {
             OnReconnected?.Invoke();
 
             return Task.CompletedTask;
         }
 
-        private Task _hubConnection_Reconnecting(Exception exception)
+        private Task Reconnecting(Exception exception)
         {
             OnReconnecting?.Invoke();
 
@@ -241,6 +251,13 @@ namespace TradeSimulator.Shared.Services
         public Task ClosedOrderBook(string username, OrderBook orderBook)
         {
             OnClosedOrderBook?.Invoke(username, orderBook);
+
+            return Task.CompletedTask;
+        }
+
+        public Task CreatedTransaction(string username, Transaction transaction)
+        {
+            OnCreatedTransaction?.Invoke(username, transaction);
 
             return Task.CompletedTask;
         }

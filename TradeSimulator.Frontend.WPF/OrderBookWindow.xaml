@@ -15,6 +15,15 @@
                     <DataGridTextColumn Header="Layer" Binding="{Binding TransactionType}" Width="1*"/>
                     <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="1*"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Trade" Padding="4" Click="TradeRowBtn_OnClick"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 

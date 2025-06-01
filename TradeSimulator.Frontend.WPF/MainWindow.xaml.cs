@@ -27,7 +27,7 @@ namespace TradeSimulator.Frontend.WPF
         private Broker Broker;
         private List<Ticker> Tickers = new();
         private ObservableCollection<OrderBook> OrderBooks = new();
-        private List<Transaction> Transactions = new();
+        private ObservableCollection<Transaction> Transactions = new();
 
         private ReconnectingDialog ReconnectingDialog = null;
 
@@ -47,8 +47,26 @@ namespace TradeSimulator.Frontend.WPF
 
             TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedTransaction += TradeHub_OnCreatedTransaction;
             TradeService.OnReconnecting += TradeService_OnReconnecting;
             TradeService.OnReconnected += TradeService_OnReconnected;
+        }
+
+        public void Dispose()
+        {
+            TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedTransaction -= TradeHub_OnCreatedTransaction;
+            TradeService.OnReconnecting -= TradeService_OnReconnecting;
+            TradeService.OnReconnected -= TradeService_OnReconnected;
+        }
+
+        private void TradeHub_OnCreatedTransaction(string username, Transaction transaction)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                AddTransaction(transaction);
+            });
         }
 
         private void TradeService_OnReconnected()
@@ -77,12 +95,6 @@ namespace TradeSimulator.Frontend.WPF
             });
         }
 
-        public void Dispose()
-        {
-            TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
-            TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
-        }
-
         public async Task RefreshData()
         {
             await GetOrCreateBroker();
@@ -91,7 +103,8 @@ namespace TradeSimulator.Frontend.WPF
             var orderBooks = await FetchOrderBooks();
             SetOrderBooks(orderBooks);
 
-            await GetTransactions();
+            var transactions = await FetchTransactions();
+            SetTransactions(transactions);
         }
 
         public async Task<bool> Connect()
@@ -263,18 +276,55 @@ namespace TradeSimulator.Frontend.WPF
 
         /* ---------------------------------------------------------- */
 
-        protected async Task GetTransactions()
+        protected async Task<List<Transaction>> FetchTransactions()
         {
-            Transactions = await TradeService.GetTransactions(BrokerId);
+            var transactions = await TradeService.GetTransactions(BrokerId);
+
+            return transactions;
+        }
+
+        protected void SetTransactions(List<Transaction> transactions)
+        {
+            Transactions = new ObservableCollection<Transaction>(transactions);
             TransactionsListView.ItemsSource = Transactions;
 
             bool isVisibile = Transactions == null || Transactions.Count == 0;
             TransactionsListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
         }
 
+        protected void AddTransaction(Transaction transaction)
+        {
+            if (Transactions == null)
+            {
+                Transactions = new ObservableCollection<Transaction>();
+                TransactionsListView.ItemsSource = Transactions;
+            }
+
+            if (!Transactions.Any(t => t.Id == transaction.Id))
+            {
+                Transactions.Add(transaction);
+
+                TransactionsListView.ItemsSource = null;
+                TransactionsListView.ItemsSource = Transactions;
+            }
+        }
+
+        protected void RemoveTransaction(string transactionId)
+        {
+            if (Transactions == null)
+                return;
+
+            var transaction = Transactions.FirstOrDefault(t => t.Id == transactionId);
+
+            if (transaction != null)
+            {
+                Transactions.Remove(transaction);
+            }
+        }
+
         private void OpenTransactionsWindow()
         {
-            var window = new TransactionsWindow(TradeService, Transactions);
+            var window = new TransactionsWindow(TradeService, Transactions.ToList());
             window.Show();
         }
 

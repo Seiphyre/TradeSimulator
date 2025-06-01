@@ -23,6 +23,7 @@ namespace TradeSimulator.Shared.Models
 
 
         IEnumerable<Transaction> GetTransactions(string brokerId = null);
+        Task<Transaction> CreateTransaction(string brokerId, string tickerDisplayName, decimal price, int quantity, TransactionType transactionType);
         Task OpenTransactionHistory();
         Task CloseTransactionHistory();
     }

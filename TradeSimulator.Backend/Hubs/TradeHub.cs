@@ -193,6 +193,29 @@ namespace TradeSimulator.Backend.Hubs
             return transactions;
         }
 
+        public async Task<Transaction> CreateTransaction(string brokerId, string tickerDisplayName, decimal price, int quantity, TransactionType transactionType)
+        {
+            var Broker = _brokerRepository.GetById(brokerId);
+
+            if (Broker == null)
+                throw new HubException("Broker not found.");
+
+            var transaction = _transactionRepository.Create(new Transaction()
+            {
+                BrokerId = brokerId,
+                CreationDate = DateTime.Now,
+
+                TickerDisplayName = tickerDisplayName,
+                Price = price,
+                Quantity = quantity,
+                TransactionType = transactionType
+            });
+
+            await Clients.All.CreatedTransaction(UserName, transaction);
+
+            return transaction;
+        }
+
         private List<Transaction> CreateRandomTransactionsForBroker(string brokerId, int tickerCount = 2, int transactionPerTicker = 3)
         {
             var Broker = _brokerRepository.GetById(brokerId);
