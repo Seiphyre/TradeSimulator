@@ -61,6 +61,11 @@ namespace TradeSimulator.Frontend.WPF
             if (TradeService != null && TradeService.IsConnected)
             {
                 await TradeService.CreateTransaction(OrderBook.BrokerId, Ticker.DisplayName, order.Price, order.Quantity, order.TransactionType);
+
+                Ticker.Orders.Remove(order);
+
+                OrdersListView.ItemsSource = null;
+                OrdersListView.ItemsSource = Ticker.Orders;
             }
         }
     }

@@ -307,21 +307,8 @@ namespace TradeSimulator.Frontend.WPF
             {
                 Transactions.Add(transaction);
 
-                TransactionsListView.ItemsSource = null;
-                TransactionsListView.ItemsSource = Transactions;
-            }
-        }
-
-        protected void RemoveTransaction(string transactionId)
-        {
-            if (Transactions == null)
-                return;
-
-            var transaction = Transactions.FirstOrDefault(t => t.Id == transactionId);
-
-            if (transaction != null)
-            {
-                Transactions.Remove(transaction);
+                //TransactionsListView.ItemsSource = null;
+                //TransactionsListView.ItemsSource = Transactions;
             }
         }
 
