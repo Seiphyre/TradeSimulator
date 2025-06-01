@@ -29,8 +29,9 @@ namespace TradeSimulator.Frontend.WPF
         private ObservableCollection<OrderBook> OrderBooks = new();
         private List<Transaction> Transactions = new();
 
-        private GridViewColumnHeader _lastHeaderClicked = null;
-        private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+        private ReconnectingDialog ReconnectingDialog = null;
+
+
 
         public MainWindow()
         {
@@ -45,12 +46,51 @@ namespace TradeSimulator.Frontend.WPF
 
             TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
+            TradeService.OnReconnecting += TradeService_OnReconnecting;
+            TradeService.OnReconnected += TradeService_OnReconnected;
+        }
+
+        private void TradeService_OnReconnected()
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                ReconnectingDialog.Close();
+            });
+        }
+
+        private void TradeService_OnReconnecting()
+        {
+            Dispatcher.InvokeAsync(async () =>
+            {
+                ReconnectingDialog = new ReconnectingDialog();
+                ReconnectingDialog.Owner = this;
+
+                bool? result = ReconnectingDialog.ShowDialog();
+
+                if (!TradeService.IsConnected)
+                    await Disconnect();
+                else
+                {
+                    await RefreshData();
+                }
+            });
         }
 
         public void Dispose()
         {
             TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
+        }
+
+        public async Task RefreshData()
+        {
+            await GetOrCreateBroker();
+            await GetTickers();
+
+            var orderBooks = await FetchOrderBooks();
+            SetOrderBooks(orderBooks);
+
+            await GetTransactions();
         }
 
         public async Task Connect()
@@ -227,13 +267,7 @@ namespace TradeSimulator.Frontend.WPF
         {
             await Connect();
 
-            await GetOrCreateBroker();
-            await GetTickers();
-
-            var orderBooks = await FetchOrderBooks();
-            SetOrderBooks(orderBooks);
-
-            await GetTransactions();
+            await RefreshData();
         }
 
         private async void DisconnectBtn_OnClick(object sender, RoutedEventArgs e)

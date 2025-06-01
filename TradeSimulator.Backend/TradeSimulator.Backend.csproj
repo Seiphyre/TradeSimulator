@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TradeSimulator.Frontend.Blazor\TradeSimulator.Frontend.Blazor.csproj" />
     <ProjectReference Include="..\TradeSimulator.Shared\TradeSimulator.Shared.csproj" />
   </ItemGroup>
 

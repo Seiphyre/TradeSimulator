@@ -17,4 +17,16 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ReconnectingDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ReconnectingDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

@@ -22,6 +22,8 @@ namespace TradeSimulator.Shared.Services
     {
         public event OnConnected OnConnected;
         public event OnDisconnected OnDisconnected;
+        public event Action OnReconnecting;
+        public event Action OnReconnected;
 
         public event OnCreatedOrderBook OnCreatedOrderBook;
         public event OnDeletedOrderBook OnDeletedOrderBook;
@@ -82,6 +84,8 @@ namespace TradeSimulator.Shared.Services
 
             _hubConnection.On<string>(nameof(ITradeHubClient.OpenedTransactionHistory), OpenedTransactionHistory);
             _hubConnection.On<string>(nameof(ITradeHubClient.ClosedTransactionHistory), ClosedTransactionHistory);
+            _hubConnection.Reconnecting += _hubConnection_Reconnecting;
+            _hubConnection.Reconnected += _hubConnection_Reconnected;
 
             // -- Start connection
 
@@ -195,6 +199,20 @@ namespace TradeSimulator.Shared.Services
         public Task Disconnected(string username)
         {
             OnDisconnected?.Invoke(username);
+
+            return Task.CompletedTask;
+        }
+
+        private Task _hubConnection_Reconnected(string arg)
+        {
+            OnReconnected?.Invoke();
+
+            return Task.CompletedTask;
+        }
+
+        private Task _hubConnection_Reconnecting(Exception exception)
+        {
+            OnReconnecting?.Invoke();
 
             return Task.CompletedTask;
         }
