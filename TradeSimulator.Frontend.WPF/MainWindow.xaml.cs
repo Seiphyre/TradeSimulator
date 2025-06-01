@@ -196,7 +196,7 @@ namespace TradeSimulator.Frontend.WPF
         {
             var orderBookTicker = Tickers.FirstOrDefault(ticker => ticker.Id == orderBook.TickerId);
 
-            var window = new OrderBookWindow(TradeService, orderBookTicker);
+            var window = new OrderBookWindow(TradeService, orderBook, orderBookTicker);
             window.Show();
         }
 

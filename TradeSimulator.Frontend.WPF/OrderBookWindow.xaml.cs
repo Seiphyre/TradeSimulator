@@ -23,17 +23,33 @@ namespace TradeSimulator.Frontend.WPF
     {
         private TradeService TradeService;
         private Ticker Ticker;
+        private OrderBook OrderBook;
 
-        public OrderBookWindow(TradeService tradeService, Ticker ticker)
+        public OrderBookWindow(TradeService tradeService, OrderBook orderBook, Ticker ticker)
         {
-            InitializeComponent();
-
             TradeService = tradeService;
             Ticker = ticker;
+            OrderBook = orderBook;
+
+            InitializeComponent();
 
             OrdersListView.ItemsSource = Ticker.Orders;
             TickerTextBox.Text = $"Ticker: {Ticker.DisplayName}";
             Title = $"Order book ({Ticker.DisplayName})";
+        }
+
+        protected override async void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            await TradeService.OpenOrderBook(OrderBook.Id);
+        }
+
+        protected async override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            await TradeService.CloseOrderBook(OrderBook.Id);
         }
     }
 }
