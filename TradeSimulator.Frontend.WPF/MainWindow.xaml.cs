@@ -93,7 +93,7 @@ namespace TradeSimulator.Frontend.WPF
             await GetTransactions();
         }
 
-        public async Task Connect()
+        public async Task<bool> Connect()
         {
             ConnectBtn.IsEnabled = false;
             ConnectBtn.Content = "Connecting...";
@@ -109,11 +109,13 @@ namespace TradeSimulator.Frontend.WPF
 
                 BrokerId = BrokerIdTextBox.Text;
 
-                Console.WriteLine("Connected !");
+                return true;
             }
-            catch (Exception exception)
+            catch
             {
-                Console.WriteLine("Failed to connect.");
+                MessageBox.Show("Failed to connect to server.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return false;
             }
             finally
             {
@@ -265,9 +267,10 @@ namespace TradeSimulator.Frontend.WPF
 
         private async void ConnectBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            await Connect();
+            bool isConnected = await Connect();
 
-            await RefreshData();
+            if (isConnected)
+                await RefreshData();
         }
 
         private async void DisconnectBtn_OnClick(object sender, RoutedEventArgs e)

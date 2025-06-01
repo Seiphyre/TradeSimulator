@@ -42,14 +42,16 @@ namespace TradeSimulator.Frontend.WPF
         {
             base.OnInitialized(e);
 
-            await TradeService.OpenOrderBook(OrderBook.Id);
+            if (TradeService != null && TradeService.IsConnected)
+                await TradeService.OpenOrderBook(OrderBook.Id);
         }
 
         protected async override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
-            await TradeService.CloseOrderBook(OrderBook.Id);
+            if (TradeService != null && TradeService.IsConnected)
+                await TradeService.CloseOrderBook(OrderBook.Id);
         }
     }
 }
