@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
 
@@ -21,33 +10,41 @@ namespace TradeSimulator.Frontend.WPF
     /// </summary>
     public partial class TransactionsWindow : Window
     {
-        private TradeService TradeService;
-        private List<Transaction> Transactions;
+        private TradeService _tradeService;
+        private List<Transaction> _transactions;
+
+
+
+        /* ----------------------------------------------------- */
 
         public TransactionsWindow(TradeService tradeService, List<Transaction> transactions)
         {
-            TradeService = tradeService;
-            Transactions = transactions;
+            _tradeService = tradeService;
+            _transactions = transactions;
 
             InitializeComponent();
 
-            TransactionsListView.ItemsSource = Transactions;
+            TransactionsListView.ItemsSource = _transactions;
         }
+
+
+
+        /* ----------------------------------------------------- */
 
         protected override async void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
 
-            if (TradeService != null && TradeService.IsConnected)
-                await TradeService.OpenTransactionHistory();
+            if (_tradeService != null && _tradeService.IsConnected)
+                await _tradeService.OpenTransactionHistory();
         }
 
         protected async override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
-            if (TradeService != null && TradeService.IsConnected)
-                await TradeService.CloseTransactionHistory();
+            if (_tradeService != null && _tradeService.IsConnected)
+                await _tradeService.CloseTransactionHistory();
         }
     }
 }

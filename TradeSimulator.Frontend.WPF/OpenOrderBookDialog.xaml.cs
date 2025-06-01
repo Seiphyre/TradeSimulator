@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 using TradeSimulator.Shared.Models;
 
 namespace TradeSimulator.Frontend.WPF
@@ -20,17 +10,21 @@ namespace TradeSimulator.Frontend.WPF
     /// </summary>
     public partial class OpenOrderBookDialog : Window
     {
-        private List<Ticker> Tickers;
+        private List<Ticker> _tickers;
 
         public Ticker SelectedTicker { get; private set; }
+
+
+
+        /* ------------------------------------------------- */
 
         public OpenOrderBookDialog(List<Ticker> tickers)
         {
             InitializeComponent();
 
-            Tickers = tickers;
+            _tickers = tickers;
 
-            foreach (Ticker ticker in Tickers)
+            foreach (Ticker ticker in _tickers)
             {
                 TickerComboBox.Items.Add(new ComboBoxItem() { Content = ticker.DisplayName });
             }
@@ -38,16 +32,20 @@ namespace TradeSimulator.Frontend.WPF
             TickerComboBox.SelectedItem = TickerComboBox.Items[0];
         }
 
-        private void okButton_Click(object sender, RoutedEventArgs e)
+
+
+        /* ------------------------------------------------- */
+
+        private void OkBtn_OnClick(object sender, RoutedEventArgs e)
         {
             int selectedIndex = TickerComboBox.SelectedIndex;
 
-            SelectedTicker = Tickers[selectedIndex];
+            SelectedTicker = _tickers[selectedIndex];
 
             DialogResult = true;
         }
 
-        private void cancelButton_Click(object sender, RoutedEventArgs e)
+        private void CancelBtn_OnClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
         }

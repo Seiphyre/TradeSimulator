@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
 
@@ -22,55 +11,64 @@ namespace TradeSimulator.Frontend.WPF
     /// </summary>
     public partial class OrderBookWindow : Window
     {
-        private TradeService TradeService;
-        private Ticker Ticker;
-        private OrderBook OrderBook;
-        private ObservableCollection<Order> Orders;
+        private TradeService _tradeService;
+        private Ticker _ticker;
+        private OrderBook _orderBook;
+        private ObservableCollection<Order> _orders;
+
+
+
+        /* -------------------------------------------------------------- */
 
         public OrderBookWindow(TradeService tradeService, OrderBook orderBook, Ticker ticker)
         {
-            TradeService = tradeService;
-            Ticker = ticker;
-            OrderBook = orderBook;
+            _tradeService = tradeService;
+            _ticker = ticker;
+            _orderBook = orderBook;
 
-            var orders = Ticker.Orders.OrderBy(o => o.TransactionType).ThenBy(o => o.Price);
-            Orders = new ObservableCollection<Order>(orders);
+            var orders = _ticker.Orders.OrderBy(o => o.TransactionType).ThenBy(o => o.Price);
+            _orders = new ObservableCollection<Order>(orders);
 
             InitializeComponent();
 
-            OrdersListView.ItemsSource = Orders;
-            TickerTextBox.Text = $"Ticker: {Ticker.DisplayName}";
-            Title = $"Order book ({Ticker.DisplayName})";
+            OrdersListView.ItemsSource = _orders;
+            TickerTextBox.Text = $"Ticker: {_ticker.DisplayName}";
+            Title = $"Order book ({_ticker.DisplayName})";
         }
+
+
+
+        /* -------------------------------------------------------------- */
 
         protected override async void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
 
-            if (TradeService != null && TradeService.IsConnected)
-                await TradeService.OpenOrderBook(OrderBook.Id);
+            if (_tradeService != null && _tradeService.IsConnected)
+                await _tradeService.OpenOrderBook(_orderBook.Id);
         }
 
         protected async override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
-            if (TradeService != null && TradeService.IsConnected)
-                await TradeService.CloseOrderBook(OrderBook.Id);
+            if (_tradeService != null && _tradeService.IsConnected)
+                await _tradeService.CloseOrderBook(_orderBook.Id);
         }
+
+
+
+        /* -------------------------------------------------------------- */
 
         private async void TradeRowBtn_OnClick(object sender, RoutedEventArgs e)
         {
             Order order = ((FrameworkElement)sender).DataContext as Order;
 
-            if (TradeService != null && TradeService.IsConnected)
+            if (_tradeService != null && _tradeService.IsConnected)
             {
-                await TradeService.CreateTransaction(OrderBook.BrokerId, Ticker.DisplayName, order.Price, order.Quantity, order.TransactionType);
+                await _tradeService.CreateTransaction(_orderBook.BrokerId, _ticker.DisplayName, order.Price, order.Quantity, order.TransactionType);
 
-                Orders.Remove(order);
-
-                //OrdersListView.ItemsSource = null;
-                //OrdersListView.ItemsSource = Ticker.Orders;
+                _orders.Remove(order);
             }
         }
     }

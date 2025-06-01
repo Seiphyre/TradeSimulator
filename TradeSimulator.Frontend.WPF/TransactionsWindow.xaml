@@ -10,7 +10,17 @@
         <StackPanel MaxWidth="960" Margin="24" >
             
             <TextBlock VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
-            <DataGrid x:Name="TransactionsListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=Transactions}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+            <DataGrid x:Name="TransactionsListView" 
+                      GridLinesVisibility="None" 
+                      ColumnHeaderStyle="{StaticResource UnfocusableHeader}" 
+                      CellStyle="{StaticResource UnfocusableCell}" 
+                      RowStyle="{StaticResource UnfocusableRow}" 
+                      Margin="0,16,0,0" 
+                      HeadersVisibility="Column" 
+                      ItemsSource="{Binding Path=Transactions}" 
+                      IsReadOnly="True" 
+                      AutoGenerateColumns="False" 
+                      CanUserResizeRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
                     <DataGridTextColumn Header="Side" Binding="{Binding TransactionType}" Width="1*"/>
