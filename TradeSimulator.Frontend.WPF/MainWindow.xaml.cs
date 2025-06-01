@@ -231,8 +231,20 @@ namespace TradeSimulator.Frontend.WPF
 
         private void OpenOrderBook_OnClick(object sender, RoutedEventArgs e)
         {
-            var window = new OrderBookWindow(TradeService, Tickers.FirstOrDefault());
-            window.Show();
+            //var window = new OrderBookWindow(TradeService, Tickers.FirstOrDefault());
+            //window.Show();
+
+            var dialog = new OpenOrderBookDialog(Tickers);
+            dialog.Owner = this;
+
+            // Display the dialog box and read the response
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                var window = new OrderBookWindow(TradeService, dialog.SelectedTicker);
+                window.Show();
+            }
         }
     }
 }
