@@ -43,7 +43,7 @@
                         <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenOrderBook_OnClick">Open</Button>
                     </Grid>
 
-                    <DataGrid GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" x:Name="OrderBookListView" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+                    <DataGrid x:Name="OrderBooksListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="1*"/>
                             <DataGridTextColumn Header="BrokerId" Binding="{Binding BrokerId}" Width="1*"/>

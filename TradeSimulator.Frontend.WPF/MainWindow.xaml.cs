@@ -124,6 +124,10 @@ namespace TradeSimulator.Frontend.WPF
         protected async Task GetOrderBooks()
         {
             OrderBooks = await TradeService.GetOrderBooks(BrokerId);
+            OrderBooksListView.ItemsSource = OrderBooks;
+
+            bool isVisibile = OrderBooks == null || OrderBooks.Count == 0;
+            OrderBooksListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /* ---------------------------------------------------------- */
@@ -194,7 +198,7 @@ namespace TradeSimulator.Frontend.WPF
         // Sort code
         private void Sort(string propertyName, ListSortDirection direction)
         {
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(OrderBookListView.ItemsSource);
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(OrderBooksListView.ItemsSource);
 
             dataView.SortDescriptions.Clear();
 
