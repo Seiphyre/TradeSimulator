@@ -32,7 +32,9 @@ namespace TradeSimulator.Frontend.WPF
             TradeService = tradeService;
             Ticker = ticker;
             OrderBook = orderBook;
-            Orders = new ObservableCollection<Order>(Ticker.Orders);
+
+            var orders = Ticker.Orders.OrderBy(o => o.TransactionType).ThenBy(o => o.Price);
+            Orders = new ObservableCollection<Order>(orders);
 
             InitializeComponent();
 

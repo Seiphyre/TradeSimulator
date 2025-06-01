@@ -48,7 +48,7 @@
 
                     <DataGrid x:Name="OrderBooksListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
+                            <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*" SortDirection="Ascending"/>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

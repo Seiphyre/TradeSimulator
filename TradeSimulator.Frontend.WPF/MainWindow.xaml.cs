@@ -288,8 +288,13 @@ namespace TradeSimulator.Frontend.WPF
 
         protected void SetTransactions(List<Transaction> transactions)
         {
-            Transactions = new ObservableCollection<Transaction>(transactions);
-            TransactionsListView.ItemsSource = Transactions;
+            if (transactions != null)
+            {
+                transactions = transactions.OrderBy(t => t.CreationDate).ToList();
+
+                Transactions = new ObservableCollection<Transaction>(transactions);
+                TransactionsListView.ItemsSource = Transactions;
+            }
 
             bool isVisibile = Transactions == null || Transactions.Count == 0;
             TransactionsListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
