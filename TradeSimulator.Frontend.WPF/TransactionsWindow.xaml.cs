@@ -26,12 +26,26 @@ namespace TradeSimulator.Frontend.WPF
 
         public TransactionsWindow(TradeService tradeService, List<Transaction> transactions)
         {
-            InitializeComponent();
-
             TradeService = tradeService;
             Transactions = transactions;
 
+            InitializeComponent();
+
             TransactionsListView.ItemsSource = Transactions;
+        }
+
+        protected override async void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            await TradeService.OpenTransactionHistory();
+        }
+
+        protected async override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            await TradeService.CloseTransactionHistory();
         }
     }
 }
