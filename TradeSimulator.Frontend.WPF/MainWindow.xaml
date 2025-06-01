@@ -28,52 +28,62 @@
 
             </Grid>
 
-            <!-- Order Books Panel -->
-            <Grid Height="Auto" Margin="0,16,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <!-- Dashboard -->
+            <StackPanel x:Name="Dashboard">
+                
+                <!-- Order Books -->
+                <StackPanel>
+                    <Grid Height="Auto" Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold">Order books</TextBlock>
-                <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenOrderBook_OnClick">Open</Button>
-            </Grid>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold">Order books</TextBlock>
+                        <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenOrderBook_OnClick">Open</Button>
+                    </Grid>
 
-            <DataGrid GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" x:Name="OrderBookListView" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="1*"/>
-                    <DataGridTextColumn Header="BrokerId" Binding="{Binding BrokerId}" Width="1*"/>
-                    <DataGridTextColumn Header="TickerId" Binding="{Binding TickerId}" Width="1*"/>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Open" Padding="8,8,8,8"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                    <DataGrid GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" x:Name="OrderBookListView" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="1*"/>
+                            <DataGridTextColumn Header="BrokerId" Binding="{Binding BrokerId}" Width="1*"/>
+                            <DataGridTextColumn Header="TickerId" Binding="{Binding TickerId}" Width="1*"/>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Open" Padding="8,8,8,8"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-            <!-- Transaction History -->
-            <Grid Height="Auto" Margin="0,16,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                </StackPanel>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
-                <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenTransactions_OnClick">Open</Button>
-            </Grid>
+                <!-- Transaction History -->
+                <StackPanel>
+                    <Grid Height="Auto" Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-            <DataGrid x:Name="TransactionsListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=Transactions}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
-                    <DataGridTextColumn Header="Side" Binding="{Binding TransactionType}" Width="1*"/>
-                    <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="1*"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
+                        <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenTransactions_OnClick">Open</Button>
+                    </Grid>
+
+                    <DataGrid x:Name="TransactionsListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=Transactions}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
+                            <DataGridTextColumn Header="Side" Binding="{Binding TransactionType}" Width="1*"/>
+                            <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="1*"/>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+                
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

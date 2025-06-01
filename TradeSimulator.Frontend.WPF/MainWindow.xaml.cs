@@ -34,6 +34,11 @@ namespace TradeSimulator.Frontend.WPF
         {
             InitializeComponent();
 
+            ConnectBtn.Visibility = Visibility.Visible;
+            DisconnectBtn.Visibility = Visibility.Collapsed;
+            BrokerIdTextBox.IsEnabled = true;
+            Dashboard.Visibility = Visibility.Collapsed;
+
             BrokerIdTextBox.Text = GenerateRandomBrokerId();
 
             //TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
@@ -58,6 +63,7 @@ namespace TradeSimulator.Frontend.WPF
                 DisconnectBtn.Visibility = Visibility.Visible;
                 ConnectBtn.Visibility = Visibility.Collapsed;
                 BrokerIdTextBox.IsEnabled = false;
+                Dashboard.Visibility = Visibility.Visible;
 
                 Console.WriteLine("Connected !");
             }
@@ -84,6 +90,7 @@ namespace TradeSimulator.Frontend.WPF
                 ConnectBtn.Visibility = Visibility.Visible;
                 DisconnectBtn.Visibility = Visibility.Collapsed;
                 BrokerIdTextBox.IsEnabled = true;
+                Dashboard.Visibility = Visibility.Collapsed;
 
                 Console.WriteLine("Disconnected.");
             }
