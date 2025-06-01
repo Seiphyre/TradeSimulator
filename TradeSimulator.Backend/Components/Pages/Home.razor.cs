@@ -63,22 +63,22 @@ namespace TradeSimulator.Backend.Components.Pages
 
         private void TradeService_OnDeleteOrderBook(string username, OrderBook orderBook)
         {
-            AddMessage($"{username}: Has deleted an order book ({orderBook.TickerId}).");
+            AddMessage($"{username}: Has deleted an order book ({orderBook.TickerDisplayName}).");
         }
 
         private void TradeService_OnCreateOrderBook(string username, OrderBook orderBook)
         {
-            AddMessage($"{username}: Has created an order book ({orderBook.TickerId}).");
+            AddMessage($"{username}: Has created an order book ({orderBook.TickerDisplayName}).");
         }
 
         private void TradeService_OnOpenedOrderBook(string username, OrderBook orderBook)
         {
-            AddMessage($"{username}: Has opened an order book ({orderBook.TickerId}).");
+            AddMessage($"{username}: Has opened an order book ({orderBook.TickerDisplayName}).");
         }
 
         private void TradeService_OnClosedOrderBook(string username, OrderBook orderBook)
         {
-            AddMessage($"{username}: Has closed an order book ({orderBook.TickerId}).");
+            AddMessage($"{username}: Has closed an order book ({orderBook.TickerDisplayName}).");
         }
 
         private void TradeService_OnDisconnected(string username)
