@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
@@ -45,6 +46,17 @@ namespace TradeSimulator.Frontend.WPF
 
             if (_tradeService != null && _tradeService.IsConnected)
                 await _tradeService.CloseTransactionHistory();
+        }
+
+
+
+        /* ----------------------------------------------------- */
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 }

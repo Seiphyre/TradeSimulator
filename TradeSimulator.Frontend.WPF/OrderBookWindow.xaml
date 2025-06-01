@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TradeSimulator.Frontend.WPF"
         mc:Ignorable="d"
         Title="Order Book" Height="450" Width="800">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <StackPanel MaxWidth="960" Margin="24" >
 
             <TextBlock x:Name="TickerTextBox" VerticalAlignment="Center" FontWeight="Bold">Ticker</TextBlock>

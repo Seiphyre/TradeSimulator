@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
@@ -70,6 +71,15 @@ namespace TradeSimulator.Frontend.WPF
 
                 _orders.Remove(order);
             }
+        }
+
+        /* ----------------------------------------------------- */
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 }

@@ -10,7 +10,7 @@
         Width="800"
         WindowStartupLocation="CenterScreen">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <StackPanel MaxWidth="960" Margin="24">
 
             <Label x:Name="pageTitle" FontWeight="Bold" FontSize="16" Content="Trade Simulator" HorizontalContentAlignment="Center"/>

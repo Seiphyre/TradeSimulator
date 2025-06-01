@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TradeSimulator.Frontend.WPF"
         mc:Ignorable="d"
         Title="Transactions" Height="450" Width="800">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <StackPanel MaxWidth="960" Margin="24" >
             
             <TextBlock VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
