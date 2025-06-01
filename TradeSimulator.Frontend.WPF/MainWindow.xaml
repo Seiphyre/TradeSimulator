@@ -46,15 +46,16 @@
                         <Button Grid.Column="1" Margin="8,0,0,0" Padding="8,8,8,8" Click="OpenOrderBook_OnClick">Open</Button>
                     </Grid>
 
-                    <DataGrid x:Name="OrderBooksListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+                    <DataGrid x:Name="OrderBooksListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding OrderBooks}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="1*"/>
-                            <DataGridTextColumn Header="BrokerId" Binding="{Binding BrokerId}" Width="1*"/>
-                            <DataGridTextColumn Header="TickerId" Binding="{Binding TickerId}" Width="1*"/>
+                            <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Open" Padding="8,8,8,8"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Open" Padding="4" Click="OpenRowBtn_OnClick"/>
+                                            <Button Margin="8,0,0,0" Padding="4" Content="&#xe5cd;" FontFamily="{StaticResource MaterialSymbolsOutlined}" Click="DeleteRowBtn_OnClick"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

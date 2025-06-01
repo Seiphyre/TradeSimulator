@@ -130,6 +130,8 @@ namespace TradeSimulator.Backend.Hubs
                 BrokerId = brokerId,
                 TickerId = tickerId,
 
+                TickerDisplayName = Ticker.DisplayName,
+
                 IsOpen = false
             });
 

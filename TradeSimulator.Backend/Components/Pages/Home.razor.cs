@@ -41,9 +41,9 @@ namespace TradeSimulator.Backend.Components.Pages
 
             TradeService.OnCreatedOrderBook -= TradeService_OnCreateOrderBook;
             TradeService.OnDeletedOrderBook -= TradeService_OnDeleteOrderBook;
-            TradeService.OnOpenedOrderBook += TradeService_OnOpenedOrderBook;
+            TradeService.OnOpenedOrderBook -= TradeService_OnOpenedOrderBook;
 
-            TradeService.OnOpenedTransactionHistory += TradeService_OnOpenedTransactionHistory;
+            TradeService.OnOpenedTransactionHistory -= TradeService_OnOpenedTransactionHistory;
         }
 
 

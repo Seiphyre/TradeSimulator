@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using TradeSimulator.Shared.Models;
 using TradeSimulator.Shared.Services;
 
@@ -21,10 +23,10 @@ namespace TradeSimulator.Frontend.WPF
     {
         private TradeService TradeService = new TradeService();
 
-        private string BrokerId => BrokerIdTextBox.Text;
+        private string BrokerId;
         private Broker Broker;
         private List<Ticker> Tickers = new();
-        private List<OrderBook> OrderBooks = new();
+        private ObservableCollection<OrderBook> OrderBooks = new();
         private List<Transaction> Transactions = new();
 
         private GridViewColumnHeader _lastHeaderClicked = null;
@@ -41,14 +43,14 @@ namespace TradeSimulator.Frontend.WPF
 
             BrokerIdTextBox.Text = GenerateRandomBrokerId();
 
-            //TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
-            //TradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
         }
 
         public void Dispose()
         {
-            //TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
-            //TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
+            TradeService.OnCreatedOrderBook -= TradeHub_OnCreateOrderBook;
+            TradeService.OnDeletedOrderBook -= TradeHub_OnDeleteOrderBook;
         }
 
         public async Task Connect()
@@ -64,6 +66,8 @@ namespace TradeSimulator.Frontend.WPF
                 ConnectBtn.Visibility = Visibility.Collapsed;
                 BrokerIdTextBox.IsEnabled = false;
                 Dashboard.Visibility = Visibility.Visible;
+
+                BrokerId = BrokerIdTextBox.Text;
 
                 Console.WriteLine("Connected !");
             }
@@ -107,6 +111,11 @@ namespace TradeSimulator.Frontend.WPF
 
         /* ---------------------------------------------------------- */
 
+        protected string GenerateRandomBrokerId()
+        {
+            return "Victor";
+        }
+
         protected async Task GetOrCreateBroker()
         {
             Broker = await TradeService.GetOrCreateBroker(BrokerId);
@@ -121,14 +130,77 @@ namespace TradeSimulator.Frontend.WPF
 
         /* ---------------------------------------------------------- */
 
-        protected async Task GetOrderBooks()
+        protected async Task<List<OrderBook>> FetchOrderBooks()
         {
-            OrderBooks = await TradeService.GetOrderBooks(BrokerId);
+            var orderBooks = await TradeService.GetOrderBooks(BrokerId);
+
+            return orderBooks;
+        }
+
+        protected async Task<OrderBook> CreateOrderBook(string tickerId)
+        {
+            var orderBook = await TradeService.CreateOrderBook(BrokerId, tickerId);
+
+            return orderBook;
+        }
+
+        protected async Task DeleteOrderBook(OrderBook orderBook)
+        {
+            await TradeService.DeleteOrderBook(orderBook.Id);
+        }
+
+        protected void SetOrderBooks(List<OrderBook> orderBooks)
+        {
+            OrderBooks = new ObservableCollection<OrderBook>(orderBooks);
             OrderBooksListView.ItemsSource = OrderBooks;
 
             bool isVisibile = OrderBooks == null || OrderBooks.Count == 0;
             OrderBooksListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        protected void AddOrderBook(OrderBook newOrderBook)
+        {
+            if (OrderBooks == null)
+            {
+                OrderBooks = new ObservableCollection<OrderBook>();
+                OrderBooksListView.ItemsSource = OrderBooks;
+            }
+
+            if (!OrderBooks.Any(orderBook => orderBook.Id == newOrderBook.Id))
+            {
+                OrderBooks.Add(newOrderBook);
+
+                OrderBooksListView.ItemsSource = null;
+                OrderBooksListView.ItemsSource = OrderBooks;
+                OrderBooksListView.Visibility = Visibility.Visible;
+            }
+        }
+
+        protected void RemoveOrderBook(string orderBookId)
+        {
+            if (OrderBooks == null)
+                return;
+
+            var orderbook = OrderBooks.FirstOrDefault(ob => ob.Id == orderBookId);
+
+            if (orderbook != null)
+            {
+                OrderBooks.Remove(orderbook);
+
+                bool isVisibile = OrderBooks == null || OrderBooks.Count == 0;
+                OrderBooksListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
+        protected void OpenOrderBookWindow(OrderBook orderBook)
+        {
+            var orderBookTicker = Tickers.FirstOrDefault(ticker => ticker.Id == orderBook.TickerId);
+
+            var window = new OrderBookWindow(TradeService, orderBookTicker);
+            window.Show();
+        }
+
+
 
         /* ---------------------------------------------------------- */
 
@@ -141,72 +213,15 @@ namespace TradeSimulator.Frontend.WPF
             TransactionsListView.Visibility = isVisibile ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        protected string GenerateRandomBrokerId()
+        private void OpenTransactionsWindow()
         {
-            return "Victor";
+            var window = new TransactionsWindow(TradeService, Transactions);
+            window.Show();
         }
 
-        private void results_Click(object sender, RoutedEventArgs e)
-        {
-            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
-            ListSortDirection sortDirection;
 
-            if (headerClicked != null)
-            {
-                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
-                {
-                    if (headerClicked != _lastHeaderClicked)
-                    {
-                        sortDirection = ListSortDirection.Ascending;
-                    }
-                    else
-                    {
-                        if (_lastDirection == ListSortDirection.Ascending)
-                        {
-                            sortDirection = ListSortDirection.Descending;
-                        }
-                        else
-                        {
-                            sortDirection = ListSortDirection.Ascending;
-                        }
-                    }
 
-                    string sortPropertyName = (headerClicked.Column.DisplayMemberBinding as Binding).Path.Path;
-                    Sort(sortPropertyName, sortDirection);
-
-                    if (sortDirection == ListSortDirection.Ascending)
-                    {
-                        headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowUp"] as DataTemplate;
-                    }
-                    else
-                    {
-                        headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowDown"] as DataTemplate;
-                    }
-
-                    // Remove arrow from previously sorted header
-                    if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
-                    {
-                        _lastHeaderClicked.Column.HeaderTemplate = null;
-                    }
-
-                    _lastHeaderClicked = headerClicked;
-                    _lastDirection = sortDirection;
-                }
-            }
-        }
-
-        // Sort code
-        private void Sort(string propertyName, ListSortDirection direction)
-        {
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(OrderBooksListView.ItemsSource);
-
-            dataView.SortDescriptions.Clear();
-
-            SortDescription sd = new SortDescription(propertyName, direction);
-            dataView.SortDescriptions.Add(sd);
-
-            dataView.Refresh();
-        }
+        /* ---------------------------------------------------------- */
 
         private async void ConnectBtn_OnClick(object sender, RoutedEventArgs e)
         {
@@ -214,7 +229,10 @@ namespace TradeSimulator.Frontend.WPF
 
             await GetOrCreateBroker();
             await GetTickers();
-            await GetOrderBooks();
+
+            var orderBooks = await FetchOrderBooks();
+            SetOrderBooks(orderBooks);
+
             await GetTransactions();
         }
 
@@ -225,15 +243,11 @@ namespace TradeSimulator.Frontend.WPF
 
         private void OpenTransactions_OnClick(object sender, RoutedEventArgs e)
         {
-            var window = new TransactionsWindow(TradeService, Transactions);
-            window.Show();
+            OpenTransactionsWindow();
         }
 
-        private void OpenOrderBook_OnClick(object sender, RoutedEventArgs e)
+        private async void OpenOrderBook_OnClick(object sender, RoutedEventArgs e)
         {
-            //var window = new OrderBookWindow(TradeService, Tickers.FirstOrDefault());
-            //window.Show();
-
             var dialog = new OpenOrderBookDialog(Tickers);
             dialog.Owner = this;
 
@@ -242,9 +256,42 @@ namespace TradeSimulator.Frontend.WPF
 
             if (result == true)
             {
-                var window = new OrderBookWindow(TradeService, dialog.SelectedTicker);
-                window.Show();
+                var selectedTicker = dialog.SelectedTicker;
+
+                var orderBook = await CreateOrderBook(selectedTicker.Id);
+
+                OpenOrderBookWindow(orderBook);
             }
+        }
+
+        private void TradeHub_OnCreateOrderBook(string username, OrderBook orderBook)
+        {
+            if (orderBook.BrokerId == BrokerId)
+            {
+                Dispatcher.Invoke(() => AddOrderBook(orderBook));
+            }
+        }
+
+        private void TradeHub_OnDeleteOrderBook(string username, OrderBook orderBook)
+        {
+            if (orderBook.BrokerId == BrokerId)
+            {
+                Dispatcher.Invoke(() => RemoveOrderBook(orderBook.Id));
+            }
+        }
+
+        private void OpenRowBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            OrderBook orderBook = ((FrameworkElement)sender).DataContext as OrderBook;
+
+            OpenOrderBookWindow(orderBook);
+        }
+
+        private async void DeleteRowBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            OrderBook orderBook = ((FrameworkElement)sender).DataContext as OrderBook;
+
+            await DeleteOrderBook(orderBook);
         }
     }
 }
