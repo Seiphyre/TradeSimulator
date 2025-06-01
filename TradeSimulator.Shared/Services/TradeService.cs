@@ -51,18 +51,21 @@ namespace TradeSimulator.Shared.Services
         {
             // -- Build connection
 
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(url, options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(JWTUtils.WriteToken(new WriteTokenOptions()
-                    {
-                        SecretKey = "70686367d1ce87264121d74a5abec5eeae3f54c70f0204017b9ab758e69a7e8d",
-                        Claims = new List<Claim>()
+            string jwt = JWTUtils.WriteToken(new WriteTokenOptions()
+            {
+                SecretKey = "70686367d1ce87264121d74a5abec5eeae3f54c70f0204017b9ab758e69a7e8d",
+                Claims = new List<Claim>()
                         {
                             new Claim(ClaimTypes.Name, username)
                         },
-                        ExpirationDate = DateTime.Now.AddHours(1)
-                    }));
+                ExpirationDate = DateTime.Now.AddHours(1)
+            });
+
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(url, options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(jwt);
+                    options.Headers.Add("Bearer", $"{jwt}"); // Needed for WPF app
                 })
                 .WithAutomaticReconnect()
                 .Build();

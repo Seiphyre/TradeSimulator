@@ -35,9 +35,14 @@ namespace TradeSimulator.Backend
                         {
                             context.Token = context.Request.Query["access_token"];
                         }
-                        else if (context.Request.Headers.TryGetValue("Authorization", out var value) && value.Count > 0)
+                        // Needed for WPF
+                        else if (context.Request.Headers.TryGetValue("Bearer", out var bearerHeaderValue) && bearerHeaderValue.Count > 0)
                         {
-                            context.Token = value[0].Substring("Bearer ".Length);
+                            context.Token = bearerHeaderValue[0];
+                        }
+                        else if (context.Request.Headers.TryGetValue("Authorization", out var authHeaderValue) && authHeaderValue.Count > 0)
+                        {
+                            context.Token = authHeaderValue[0].Substring("Bearer ".Length);
                         }
 
                         return Task.CompletedTask;
