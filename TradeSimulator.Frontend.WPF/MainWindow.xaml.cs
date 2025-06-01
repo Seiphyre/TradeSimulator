@@ -197,11 +197,6 @@ namespace TradeSimulator.Frontend.WPF
             dataView.Refresh();
         }
 
-        private void btn1_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private async void ConnectBtn_OnClick(object sender, RoutedEventArgs e)
         {
             await Connect();
@@ -215,6 +210,18 @@ namespace TradeSimulator.Frontend.WPF
         private async void DisconnectBtn_OnClick(object sender, RoutedEventArgs e)
         {
             await Disconnect();
+        }
+
+        private void OpenTransactions_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new TransactionsWindow(TradeService, Transactions);
+            window.Show();
+        }
+
+        private void OpenOrderBook_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new OrderBookWindow(TradeService, Tickers.FirstOrDefault());
+            window.Show();
         }
     }
 }

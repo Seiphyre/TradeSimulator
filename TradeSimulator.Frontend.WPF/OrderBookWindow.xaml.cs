@@ -33,6 +33,7 @@ namespace TradeSimulator.Frontend.WPF
 
             OrdersListView.ItemsSource = Ticker.Orders;
             TickerTextBox.Text = $"Ticker: {Ticker.DisplayName}";
+            Title = $"Order book ({Ticker.DisplayName})";
         }
     }
 }

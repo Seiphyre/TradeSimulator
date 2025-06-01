@@ -5,17 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TradeSimulator.Frontend.WPF"
         mc:Ignorable="d"
-        Title="TransactionsWindow" Height="450" Width="800">
-    <StackPanel MaxWidth="960" Margin="24" >
-        <TextBlock VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
-        <DataGrid x:Name="TransactionsListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=Transactions}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
-                <DataGridTextColumn Header="Side" Binding="{Binding TransactionType}" Width="1*"/>
-                <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="1*"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </StackPanel>
+        Title="Transactions" Height="450" Width="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="960" Margin="24" >
+            
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold">Transactions</TextBlock>
+            <DataGrid x:Name="TransactionsListView" GridLinesVisibility="None" ColumnHeaderStyle="{StaticResource UnfocusableHeader}" CellStyle="{StaticResource UnfocusableCell}" RowStyle="{StaticResource UnfocusableRow}" Margin="0,16,0,0" HeadersVisibility="Column" ItemsSource="{Binding Path=Transactions}" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
+                    <DataGridTextColumn Header="Side" Binding="{Binding TransactionType}" Width="1*"/>
+                    <DataGridTextColumn Header="Ticker" Binding="{Binding TickerDisplayName}" Width="1*"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="1*"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+        </StackPanel>
+    </ScrollViewer>
 </Window>
