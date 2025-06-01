@@ -171,7 +171,10 @@ namespace TradeSimulator.Frontend.WPF
 
         protected string GenerateRandomBrokerId()
         {
-            return "Victor";
+            var rand = new Random();
+            int tag = rand.Next(1000, 9999);
+
+            return $"broker#{tag}";
         }
 
         protected async Task GetOrCreateBroker()
