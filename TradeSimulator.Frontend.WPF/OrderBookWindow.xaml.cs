@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,16 +25,18 @@ namespace TradeSimulator.Frontend.WPF
         private TradeService TradeService;
         private Ticker Ticker;
         private OrderBook OrderBook;
+        private ObservableCollection<Order> Orders;
 
         public OrderBookWindow(TradeService tradeService, OrderBook orderBook, Ticker ticker)
         {
             TradeService = tradeService;
             Ticker = ticker;
             OrderBook = orderBook;
+            Orders = new ObservableCollection<Order>(Ticker.Orders);
 
             InitializeComponent();
 
-            OrdersListView.ItemsSource = Ticker.Orders;
+            OrdersListView.ItemsSource = Orders;
             TickerTextBox.Text = $"Ticker: {Ticker.DisplayName}";
             Title = $"Order book ({Ticker.DisplayName})";
         }
@@ -62,10 +65,10 @@ namespace TradeSimulator.Frontend.WPF
             {
                 await TradeService.CreateTransaction(OrderBook.BrokerId, Ticker.DisplayName, order.Price, order.Quantity, order.TransactionType);
 
-                Ticker.Orders.Remove(order);
+                Orders.Remove(order);
 
-                OrdersListView.ItemsSource = null;
-                OrdersListView.ItemsSource = Ticker.Orders;
+                //OrdersListView.ItemsSource = null;
+                //OrdersListView.ItemsSource = Ticker.Orders;
             }
         }
     }
