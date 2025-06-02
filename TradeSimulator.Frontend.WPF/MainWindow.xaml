@@ -21,13 +21,17 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Label x:Name="BrokerIdLabel" Grid.Column="0" Background="White" VerticalContentAlignment="Center" Padding="0,0,0,0" Target="{Binding ElementName=BrokerIdTextBox}">Broker name</Label>
                 <TextBox Name="BrokerIdTextBox" Grid.Column="1" Margin="8,0,0,0" Padding="4" VerticalContentAlignment="Center" Height="40"/>
-                <Button x:Name="ConnectBtn" Grid.Column="2" Margin="8,0,0,0" Padding="8,8,8,8" Click="ConnectBtn_OnClick">Connect</Button>
-                <Button x:Name="DisconnectBtn" Grid.Column="3" Margin="8,0,0,0" Padding="8,8,8,8" Click="DisconnectBtn_OnClick" Visibility="Collapsed">Disconnect</Button>
+                <Label x:Name="URL" Grid.Column="2" Background="White" Margin="8,0,0,0" VerticalContentAlignment="Center" Padding="0,0,0,0" Target="{Binding ElementName=UrlTextBox}">URL</Label>
+                <TextBox Name="UrlTextBox" Grid.Column="3" Margin="8,0,0,0" Padding="4" VerticalContentAlignment="Center" Height="40"/>
+                <Button x:Name="ConnectBtn" Grid.Column="4" Margin="8,0,0,0" Padding="8,8,8,8" Click="ConnectBtn_OnClick">Connect</Button>
+                <Button x:Name="DisconnectBtn" Grid.Column="5" Margin="8,0,0,0" Padding="8,8,8,8" Click="DisconnectBtn_OnClick" Visibility="Collapsed">Disconnect</Button>
 
             </Grid>
 

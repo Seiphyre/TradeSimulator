@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -37,6 +38,7 @@ namespace TradeSimulator.Frontend.WPF
             Dashboard.Visibility = Visibility.Collapsed;
 
             BrokerIdTextBox.Text = GenerateRandomBrokerId();
+            UrlTextBox.Text = "http://localhost:5038";
 
             _tradeService.OnCreatedOrderBook += TradeHub_OnCreateOrderBook;
             _tradeService.OnDeletedOrderBook += TradeHub_OnDeleteOrderBook;
@@ -82,11 +84,19 @@ namespace TradeSimulator.Frontend.WPF
 
             try
             {
-                await _tradeService.Connect("http://localhost:5038/trade-hub", BrokerIdTextBox.Text);
+                string url = UrlTextBox.Text;
+
+                if (url != null && !url.EndsWith('/'))
+                    url += '/';
+
+                url = Path.Combine(url, "trade-hub");
+
+                await _tradeService.Connect(url, BrokerIdTextBox.Text);
 
                 DisconnectBtn.Visibility = Visibility.Visible;
                 ConnectBtn.Visibility = Visibility.Collapsed;
                 BrokerIdTextBox.IsEnabled = false;
+                UrlTextBox.IsEnabled = false;
                 Dashboard.Visibility = Visibility.Visible;
 
                 _brokerId = BrokerIdTextBox.Text;
@@ -118,6 +128,7 @@ namespace TradeSimulator.Frontend.WPF
                 ConnectBtn.Visibility = Visibility.Visible;
                 DisconnectBtn.Visibility = Visibility.Collapsed;
                 BrokerIdTextBox.IsEnabled = true;
+                UrlTextBox.IsEnabled = true;
                 Dashboard.Visibility = Visibility.Collapsed;
 
                 CloseAllSubWindows();
